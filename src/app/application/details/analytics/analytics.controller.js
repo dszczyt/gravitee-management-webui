@@ -150,7 +150,7 @@ class ApplicationAnalyticsController {
               i++;
               let lineColor = report.id === 'response-status' ? that.getColorByStatus(bucket.name) : that.colorByBucket[i % that.colorByBucket.length];
               let bgColor = report.id === 'response-status' ? that.getBgColorByStatus(bucket.name) : that.bgColorByBucket[i % that.bgColorByBucket.length];
-              var label = request.label ? request.label : (report.label || report.labelPrefix + ' ' + bucket.name);
+              var label = request.label ? request.label : (report.label || bucket.name);
               if (report.id === 'apis') {
                 var api = currentResponse.data.metadata[bucket.name];
                 label = (!api.deleted) ? api.name + ' (' + api.version + ')' : api.name;

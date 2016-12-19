@@ -160,7 +160,7 @@ class ApiAnalyticsController {
               i++;
               let lineColor = report.id === 'response-status' ? that.getColorByStatus(bucket.name) : that.colorByBucket[i % that.colorByBucket.length];
               let bgColor = report.id === 'response-status' ? that.getBgColorByStatus(bucket.name) : that.bgColorByBucket[i % that.bgColorByBucket.length];
-              let label = request.label ? request.label : (report.label || report.labelPrefix + ' ' + bucket.name);
+              let label = request.label ? request.label : (report.label || bucket.name);
               if (report.id === 'applications') {
                 let application = currentResponse.data.metadata[bucket.name];
                 label = application.name;
