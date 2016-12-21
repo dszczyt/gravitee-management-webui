@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 class ApiPropertiesController {
-  constructor (ApiService, resolvedApi, $state, $mdDialog, NotificationService, $scope, $rootScope) {
+  constructor (ApiService, resolvedApi, $mdSidenav, $mdEditDialog, $state, $mdDialog, NotificationService, $scope, $rootScope) {
     'ngInject';
     this.ApiService = ApiService;
     this.$mdDialog = $mdDialog;
@@ -23,6 +23,28 @@ class ApiPropertiesController {
     this.$state = $state;
     this.$rootScope = $rootScope;
     this.api = resolvedApi.data;
+    this.$mdSidenav = $mdSidenav;
+    this.$mdEditDialog = $mdEditDialog;
+
+    this.dynamicPropertyService = this.api.services && this.api.services['dynamic-property'];
+
+    this.timeUnits = [ 'SECONDS', 'MINUTES', 'HOURS' ];
+    this.dynamicPropertyProviders = [
+      {
+        id: 'HTTP',
+        name: 'Custom (HTTP)'
+      }
+    ];
+
+    this.init();
+  }
+
+  init() {
+    this.$mdSidenav('dynamic-properties-config')
+      .onClose()
+      .then(function () {
+        console.log("close LEFT is done");
+      });
   }
 
   hasPropertiesDefined() {
@@ -71,6 +93,33 @@ class ApiPropertiesController {
       _this.$rootScope.$broadcast('apiChangeSuccess');
       _this.NotificationService.show('API \'' + _this.$scope.$parent.apiCtrl.api.name + '\' saved');
     });
+  }
+
+  editValue(event, key) {
+    event.stopPropagation();
+
+    var _that = this;
+    this.$mdEditDialog.small({
+      modelValue: _that.api.properties[key],
+      placeholder: 'Set property value',
+      save: function (input) {
+        _that.api.properties[key] = input.$modelValue;
+      },
+      targetEvent: event,
+      validators: {
+        'md-maxlength': 160
+      }
+    });
+  }
+
+  toggleRight() {
+    this.$mdSidenav('dynamic-properties-config')
+      .toggle();
+  }
+
+  close() {
+    this.$mdSidenav('dynamic-properties-config')
+      .close();
   }
 }
 
