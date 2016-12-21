@@ -40,11 +40,11 @@ class ApiPropertiesController {
   }
 
   init() {
-    this.$mdSidenav('dynamic-properties-config')
-      .onClose()
-      .then(function () {
+    this.$mdSidenav('dynamic-properties-config', true).then(function(instance) {
+      instance.onClose(function () {
         console.log("close LEFT is done");
       });
+    });
   }
 
   hasPropertiesDefined() {
@@ -86,9 +86,10 @@ class ApiPropertiesController {
     });
   }
 
-  update(api) {
+  update() {
     var _this = this;
-    this.ApiService.update(api).then((updatedApi) => {
+    this.api.services['dynamic-property'] = this.dynamicPropertyService;
+    this.ApiService.update(this.api).then((updatedApi) => {
       _this.api = updatedApi.data;
       _this.$rootScope.$broadcast('apiChangeSuccess');
       _this.NotificationService.show('API \'' + _this.$scope.$parent.apiCtrl.api.name + '\' saved');

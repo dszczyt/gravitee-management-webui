@@ -119,7 +119,7 @@
         <md-input-container class="md-block" flex-gt-xs>
           <label>Time Unit</label>
           <md-select ng-model="healthCheckCtrl.healthcheck.unit" placeholder="Time unit" required ng-required="true">
-            <md-option ng-repeat="timeUnit in healthCheckCtrl.timeUnits">{{timeUnit}}</md-option>
+            <md-option ng-repeat="timeUnit in healthCheckCtrl.timeUnits" ng-value="timeUnit">{{timeUnit}}</md-option>
           </md-select>
         </md-input-container>
       </div>
@@ -140,7 +140,7 @@
         <md-input-container class="md-block" flex-gt-xs>
           <label>HTTP Method</label>
           <md-select ng-model="healthCheckCtrl.healthcheck.request.method" placeholder="HTTP Method" ng-required="true">
-            <md-option ng-repeat="httpMethod in healthCheckCtrl.httpMethods">{{httpMethod}}</md-option>
+            <md-option ng-repeat="httpMethod in healthCheckCtrl.httpMethods" ng-value="httpMethod">{{httpMethod}}</md-option>
           </md-select>
         </md-input-container>
       </div>
