@@ -34,12 +34,124 @@ class DashboardController {
     this.endDate = moment().toDate();
     this.now = moment().toDate();
 
+    this.$scope.platformDashboard = [{
+      col: 0,
+      row: 0,
+      sizeY: 1,
+      sizeX: 2,
+      title: "Top API",
+      subhead: 'Ordered by API calls',
+      chart: {
+        type: 'table',
+        columns: ['API', 'Hits'],
+        paging: 5,
+        request: {
+          type: "group_by",
+          field: "api",
+          size: 10000
+        }
+      }
+    }, {
+      col: 2,
+      row: 0,
+      sizeY: 1,
+      sizeX: 2,
+      title: "Top applications",
+      subhead: 'Ordered by application calls',
+      chart: {
+        type: 'table',
+        columns: ['Application', 'Hits'],
+        paging: 5,
+        request: {
+          type: "group_by",
+          field: "application",
+          size: 10000
+        }
+      }
+    }, {
+      col: 0,
+      row: 1,
+      sizeY: 1,
+      sizeX: 1,
+      title: "Top failed APIs",
+      subhead: 'Order by API 5xx status calls',
+      chart: {
+        type: 'table',
+        columns: ['Application', 'Hits'],
+        paging: 5,
+        request: {
+          type: "group_by",
+          field: "api",
+          query: "status:[500 TO 599]",
+          size: 10000
+        }
+      }
+    }, {
+      col: 1,
+      row: 1,
+      sizeY: 1,
+      sizeX: 1,
+      title: "Top slow APIs",
+      subhead: 'Order by API response time calls',
+      chart: {
+        type: 'table',
+        columns: ['API', 'Latency (in ms)'],
+        paging: 5,
+        request: {
+          type: "group_by",
+          field: "api",
+          orderField: "response-time",
+          orderDirection: "desc",
+          orderType: "avg",
+          size: 10000
+        }
+      }
+    }, {
+      col: 2,
+      row: 1,
+      sizeY: 1,
+      sizeX: 1,
+      title: "Top overhead APIs",
+      subhead: 'Order by gateway latency',
+      chart: {
+        type: 'table',
+        columns: ['API', 'Latency (in ms)'],
+        paging: 5,
+        request: {
+          type: "group_by",
+          field: "api",
+          orderField: "proxy-latency",
+          orderDirection: "desc",
+          orderType: "avg",
+          size: 10000
+        }
+      }
+    }];
+
+    var _that = this;
+
+    _.forEach(this.$scope.platformDashboard, function (widget) {
+      _.merge(widget, {
+        chart: {
+          service: {
+            caller: _that.AnalyticsService,
+            function: _that.AnalyticsService.analytics
+          }
+        }
+      });
+    });
+
     // init events
-    this.initEventLabels();
-    this.initEventTypes();
+    this.eventLabels.start_api = "Start";
+    this.eventLabels.stop_api = "Stop";
+    this.eventLabels.publish_api = "Deploy";
+    this.eventLabels.unpublish_api = "Undeploy";
+    this.eventTypes = ['START_API', 'STOP_API', 'PUBLISH_API', 'UNPUBLISH_API'];
+
     this.initPagination();
     this.getEvents = this.getEvents.bind(this);
 
+    /*
     // init charts
     this.$scope.paging = [];
     this.analyticsData = this.analytics();
@@ -49,11 +161,16 @@ class DashboardController {
       this.setTimeframe($state.params.timeframe);
     } else {
       this.setTimeframe('7d');
-    }
+    }*/
 
     // get data
-    this.updateCharts();
-    this.searchEvents();
+  //  this.updateCharts();
+    // Refresh widget on each timeframe change
+    this.$scope.$on('timeframeChange', function (event, timeframe) {
+      this.searchEvents();
+      console.log(event);
+      console.log(timeframe);
+    });
   }
 
   undoAPI() {
@@ -141,19 +258,8 @@ class DashboardController {
     };
   }
 
-  initEventLabels() {
-    this.eventLabels.start_api = "Start";
-    this.eventLabels.stop_api = "Stop";
-    this.eventLabels.publish_api = "Deploy";
-    this.eventLabels.unpublish_api = "Undeploy";
-  }
-
   getEventLabel(label) {
     return this.eventLabels[label];
-  }
-
-  initEventTypes() {
-    this.eventTypes = ['START_API', 'STOP_API', 'PUBLISH_API', 'UNPUBLISH_API'];
   }
 
   updateCharts() {
@@ -258,111 +364,6 @@ class DashboardController {
     });
     this.beginDate = moment(now - this.timeframe.range).toDate();
     this.endDate = moment(now).toDate();
-  }
-
-  analytics() {
-    return {
-      tops: [
-        {
-          title: 'Top APIs',
-          titleKey: 'API',
-          titleValue: 'Hits',
-          subhead: 'Order by API calls',
-          request: this.AnalyticsService.topHits,
-          key: "top-apis",
-          query: "*:*",
-          field: "api",
-          size: 10000,
-          style: "big"
-        },
-        {
-          title: 'Top applications',
-          titleKey: 'Application',
-          titleValue: 'Hits',
-          subhead: 'Order by API calls',
-          request: this.AnalyticsService.topHits,
-          key: "top-apps",
-          query: "*:*",
-          field: "application",
-          size: 10000,
-          style: "big"
-        },
-        {
-          title: 'Top failed APIs',
-          titleKey: 'API',
-          titleValue: 'Hits',
-          subhead: 'Order by API 5xx status calls',
-          request: this.AnalyticsService.topHits,
-          key: "top-failed-apis",
-          query: "status:[500 TO 599]",
-          field: "api",
-          size: 10000,
-          style: "small"
-        },
-        {
-          title: 'Top slow APIs',
-          titleKey: 'API',
-          titleValue: 'Latency (in ms)',
-          subhead: 'Order by API response time calls',
-          request: this.AnalyticsService.topHits,
-          key: "top-slow-apis",
-          query: "*:*",
-          field: "api",
-          orderField: "response-time",
-          orderDirection: "desc",
-          orderType: "avg",
-          size: 10000,
-          style: "small"
-        },
-        {
-          title: 'Top overhead APIs',
-          titleKey: 'API',
-          titleValue: 'Latency (in ms)',
-          subhead: 'Order by proxy latency',
-          request: this.AnalyticsService.topHits,
-          key: "top-overhead-apis",
-          query: "*:*",
-          field: "api",
-          orderField: "proxy-latency",
-          orderDirection: "desc",
-          orderType: "avg",
-          size: 10000,
-          style: "small"
-        }
-      ],
-      timeframes: [
-        {
-          id: '1h',
-          title: 'Last hour',
-          range: 1000 * 60 * 60,
-          interval: 1000 * 60
-        },
-        {
-          id: '24h',
-          title: 'Last day',
-          range: 1000 * 60 * 60 * 24,
-          interval: 1000 * 60 * 60
-        },
-        {
-          id: '7d',
-          title: 'Last week',
-          range: 1000 * 60 * 60 * 24 * 7,
-          interval: 1000 * 60 * 60 * 3
-        },
-        {
-          id: '30d',
-          title: 'Last month',
-          range: 1000 * 60 * 60 * 24 * 30,
-          interval: 10000000
-        },
-        {
-          id: '1y',
-          title: 'Last year',
-          range: 1000 * 60 * 60 * 24 * 365,
-          interval: 10000000
-        }
-      ]
-    };
   }
 }
 

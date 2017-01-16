@@ -91,8 +91,6 @@ import DashboardModelDirective from './platform/dashboard/dashboardModel.directi
 import ViewsController from './configuration/admin/views/views.controller';
 import ViewService from './services/view.service';
 import DeleteViewDialogController from './configuration/admin/views/delete.view.dialog.controller';
-import AnalyticsAPIModelDirective from './application/details/analytics/analyticsAPIModel.directive';
-import AnalyticsApplicationModelDirective from './api/admin/analytics/analyticsApplicationModel.directive';
 import GroupsController from './configuration/admin/groups/groups.controller';
 import GroupService from './services/group.service';
 import DialogAddGroupController from './configuration/admin/groups/dialog/add-group.dialog.controller';
@@ -112,11 +110,18 @@ import TagsController from './configuration/admin/tags/tags.controller';
 import TagService from './services/tag.service';
 import DeleteTagDialogController from './configuration/admin/tags/delete.tag.dialog.controller';
 import ChartDirective from './components/chart/chart.directive';
+import WidgetDirective from './components/widget/widget.directive';
+import WidgetChartDirective from './components/widget/widget-chart.directive';
+import WidgetChartTableDirective from './components/widget/widget-table.directive';
+import WidgetChartLineDirective from './components/widget/widget-line.directive';
+import WidgetChartPieDirective from './components/widget/widget-pie.directive';
+import DashboardDirective from './components/analytics/dashboard.directive';
+import TimeframeDirective from './components/analytics/timeframe.directive';
 
 angular.module('gravitee', ['ui.router', 'ngMaterial', 'ramlConsoleApp', 'ng-showdown', 'swaggerUi',
   'ngMdIcons', 'ui.codemirror', 'md.data.table', 'ngCookies', 'dragularModule', 'readMore',
   'ngMessages', 'vAccordion', 'schemaForm', 'ngclipboard', 'ui.validate', 'gvConstants', 'angular-timeline',
-  'ab-base64',  'ngFileUpload', 'md-steppers', 'ui.tree', 'angular-jwt'])
+  'ab-base64',  'ngFileUpload', 'md-steppers', 'ui.tree', 'angular-jwt', 'gridster'])
   .config(config)
   .config(routerConfig)
   .config(interceptorConfig)
@@ -228,10 +233,15 @@ angular.module('gravitee', ['ui.router', 'ngMaterial', 'ramlConsoleApp', 'ng-sho
   .directive('graviteeDiff', () => new DiffDirective())
   .directive('graviteeImage', () => new ImageDirective())
   .directive('graviteeDashboardModel', () => new DashboardModelDirective())
-  .directive('graviteeAnalyticsApiModel', () => new AnalyticsAPIModelDirective())
-  .directive('graviteeAnalyticsApplicationModel', () => new AnalyticsApplicationModelDirective())
   .directive('graviteeEmptyState', () => new EmptyStateDirective())
   .directive('graviteeChart', () => new ChartDirective())
+  .directive('graviteeWidget', () => new WidgetDirective())
+  .directive('graviteeWidgetChart', () => new WidgetChartDirective())
+  .directive('graviteeChartTable', () => new WidgetChartTableDirective())
+  .directive('graviteeChartPie', () => new WidgetChartPieDirective())
+  .directive('graviteeChartLine', () => new WidgetChartLineDirective())
+  .directive('graviteeDashboard', () => new DashboardDirective())
+  .directive('graviteeTimeframe', () => new TimeframeDirective())
   .filter('humanDateFilter', function () {
     return function(input) {
       if (!moment().subtract(1, 'weeks').isAfter(input)) {

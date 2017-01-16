@@ -13,32 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class AnalyticsApplicationModelDirective {
-  constructor () {
+class WidgetDirective {
+  constructor() {
     let directive = {
       restrict: 'E',
-      templateUrl: 'app/api/admin/analytics/analyticsApplicationModel.html',
+      templateUrl: 'app/components/widget/widget.html',
       scope: {
-        id: '@id',
-        metadata: '@metadata'
-      },
-      controller: AnalyticsApplicationModelController,
-      controllerAs: 'analyticsApplicationModelCtrl'
+        widget: '='
+      }
     };
 
     return directive;
   }
 }
 
-class AnalyticsApplicationModelController {
-  constructor($scope) {
-    'ngInject';
-    this.$scope = $scope;
-    if (this.$scope.metadata) {
-      this.$scope.entity = JSON.parse(this.$scope.metadata);
-      this.$scope.entity.id = this.$scope.id;
-    }
-  }
-}
-
-export default AnalyticsApplicationModelDirective;
+export default WidgetDirective;

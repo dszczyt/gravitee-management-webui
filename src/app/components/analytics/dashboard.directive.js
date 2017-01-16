@@ -13,32 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class AnalyticsAPIModelDirective {
-  constructor () {
+class DashboardDirective {
+  constructor() {
     let directive = {
       restrict: 'E',
-      templateUrl: 'app/application/details/analytics/analyticsAPIModel.html',
       scope: {
-        id: '@id',
-        metadata: '@metadata'
+        model: '='
       },
-      controller: AnalyticsAPIModelController,
-      controllerAs: 'analyticsAPIModelCtrl'
+      templateUrl: 'app/components/analytics/dashboard.html',
+      controller: DashboardController,
+      controllerAs: 'dashboardCtrl',
+      bindToController: true
     };
 
     return directive;
   }
 }
 
-class AnalyticsAPIModelController {
-  constructor($scope) {
+class DashboardController {
+  constructor($scope, $timeout, $rootScope) {
     'ngInject';
-    this.$scope = $scope;
-    if (this.$scope.metadata) {
-      this.$scope.entity = JSON.parse(this.$scope.metadata);
-      this.$scope.entity.id = this.$scope.id;
-    }
+
+    $scope.dashboardOptions = {
+      margins: [20, 20],
+      columns: 4,
+      swapping: false,
+      draggable: {
+        handle: 'span'
+      },
+      resizable: {
+        enabled: true,
+        stop: function () {
+          $scope.$broadcast('onWidgetResize');
+        }
+      }
+    };
+
+    $timeout(function(){
+      $rootScope.$broadcast('timeframeReload');
+    });
   }
 }
 
-export default AnalyticsAPIModelDirective;
+export default DashboardDirective;

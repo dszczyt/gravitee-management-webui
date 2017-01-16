@@ -1,0 +1,28 @@
+.widget-card {
+  & > md-card-title {
+    padding-bottom: 0px;
+    span.md-title {
+      font-size: 12px;
+    }
+    span.md-subhead {
+      font-size: 11px;
+    }
+
+    & > md-card-title-media {
+      margin-top: 0px;
+    }
+  }
+
+  & > md-card-content {
+    padding-bottom: 0px;
+    padding-top: 16px;
+  }
+
+  a {
+    color: #ccc;
+  }
+
+  a:hover {
+    color: #5a646d;
+  }
+}

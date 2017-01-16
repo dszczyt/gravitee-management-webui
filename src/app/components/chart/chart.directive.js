@@ -50,15 +50,18 @@ class ChartDirective {
           }
         });
 
+        scope.$on('onWidgetResize', function () {
+          onResize();
+        });
+
         function onResize() {
           setChartSize();
           executeDisplayChart(lastOptions, element);
         }
 
         function setChartSize() {
-          let chartElement = angular.element(element[0]);
-          chartElement.css('height', scope.height || chartElement.parent().height());
-          chartElement.css('width', scope.width || chartElement.parent().width());
+          element.css('height', scope.height || element.parent().parent().height());
+          element.css('width', scope.width || element.parent().parent().width());
         }
 
         function executeDisplayChart(newOptions, element) {
@@ -124,7 +127,6 @@ class ChartDirective {
 
         function syncExtremes(e) {
           let thisChart = this.chart;
-
           if (e.trigger !== 'syncExtremes') {
             Highcharts.each(Highcharts.charts, function (chart) {
               if (chart && chart !== thisChart) {
@@ -149,10 +151,11 @@ class ChartDirective {
               newOptions.title = {text: ''};
             }
             newOptions.yAxis = _.merge(newOptions.yAxis, {title: {text: ''}});
-            newOptions.chart = {type: scope.type};
+            newOptions.chart = _.merge(newOptions.chart, {type: scope.type});
             if (scope.zoom) {
               newOptions.chart.zoomType = 'x';
             }
+
             newOptions.credits = {
               enabled: false
             };
@@ -164,6 +167,7 @@ class ChartDirective {
 
             if (scope.type && scope.type.startsWith('area')) {
               newOptions.tooltip = {
+                /*
                 formatter: function () {
                   let s = '<b>' + this.x + '</b>';
                   if (_.filter(this.points, function (point) {
@@ -178,6 +182,8 @@ class ChartDirective {
                   }
                   return s;
                 },
+                */
+                headerFormat: '<b>{point.key}</b><br/>',
                 shared: true
               };
               newOptions.plotOptions = _.merge(newOptions.plotOptions, {
@@ -188,6 +194,7 @@ class ChartDirective {
                   fillOpacity: 0.1
                 }
               });
+
               if (_.isArray(scope.options)) {
                 newOptions.xAxis = _.merge(newOptions.xAxis, {crosshair: true, events: {setExtremes: syncExtremes}});
               }
@@ -248,6 +255,7 @@ class ChartDirective {
                 };
               }
             }
+
             Highcharts.chart(element, newOptions);
           }
         }
