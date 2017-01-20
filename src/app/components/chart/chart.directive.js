@@ -140,6 +140,15 @@ class ChartDirective {
 
         function displayChart(newOptions, element) {
           if (newOptions) {
+            newOptions = _.merge(newOptions, {
+              lang: {
+                noData: '<code>No data to display</code>'
+              },
+              noData: {
+                useHTML: true
+              }
+            });
+
             if (newOptions.title) {
               newOptions.title.style = {
                 'fontWeight': 'bold',

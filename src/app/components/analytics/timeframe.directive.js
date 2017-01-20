@@ -115,10 +115,6 @@ class TimeframeController {
 
     var _that = this;
 
-    this.$scope.current = {
-
-    };
-
     // Event received when a zoom is done on a chart
     this.$rootScope.$on('timeframeZoom', function (event, zoom) {
       let diff = zoom.to - zoom.from;

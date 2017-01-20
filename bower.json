@@ -50,7 +50,8 @@
       "main": [
         "./highcharts.js",
         "./highcharts-more.js",
-        "./js/modules/solid-gauge.js"
+        "./js/modules/solid-gauge.js",
+        "./js/modules/no-data-to-display.js"
       ]
     },
     "api-console": {

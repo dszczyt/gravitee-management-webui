@@ -56,6 +56,40 @@ class WidgetChartLineDirective {
   }
 
   link(scope) {
+    scope.result = {
+      title: {text: scope.$parent.chart.title},
+      xAxis: {
+        type: 'datetime',
+        dateTimeLabelFormats: { // don't display the dummy year
+          month: '%e. %b',
+          year: '%b'
+        }
+      },
+      plotOptions: {
+        areaspline: {
+          stacking: scope.$parent.chart.stacked ? 'normal' : null
+        },
+        series: {
+          /*
+          pointStart: timestamp.from,
+          pointInterval: timestamp.interval
+          */
+        }
+      },
+      chart: {
+        events: {
+          selection: function (event) {
+            if (!event.resetSelection) {
+              scope.$rootScope.$broadcast("timeframeZoom", {
+                from: Math.floor(event.xAxis[0].min),
+                to: Math.round(event.xAxis[0].max)
+              });
+            }
+          }
+        }
+      }
+    };
+
     scope.$watch('data', function(data) {
       if (data) {
         let values = [], i;
@@ -82,47 +116,17 @@ class WidgetChartLineDirective {
 
           let timestamp = data.timestamp;
 
-          scope.nodata = false;
-
-          scope.result = {
-            title: {text: scope.$parent.chart.title},
-            xAxis: {
-              type: 'datetime',
-              dateTimeLabelFormats: { // don't display the dummy year
-                month: '%e. %b',
-                year: '%b'
-              }
-            },
+          scope.result = _.merge(scope.result, {
+            series: values,
             plotOptions: {
-              areaspline: {
-                stacking: scope.$parent.chart.stacked ? 'normal' : null
-              },
               series: {
                 pointStart: timestamp.from,
                 pointInterval: timestamp.interval
               }
-            },
-            chart: {
-              events: {
-                selection: function (event) {
-                  if (!event.resetSelection) {
-                    scope.$rootScope.$broadcast("timeframeZoom", {
-                      from: Math.floor(event.xAxis[0].min),
-                      to: Math.round(event.xAxis[0].max)
-                    });
-                  } else {
-                    scope.$rootScope.$broadcast("timeframeZoom", {
-                      from: timestamp.from,
-                      to: timestamp.to
-                    });
-                  }
-                }
-              }
-            },
-            series: values
-          };
+            }
+          });
         } else {
-          scope.nodata = true;
+          scope.result.series = [];
         }
       }
     }, true);
