@@ -198,6 +198,12 @@ class TimeframeController {
         from: timeframe.from,
         to: timeframe.to
       });
+
+      that.$scope.$emit('timeframeChange', {
+        interval: timeframe.interval,
+        from: timeframe.from,
+        to: timeframe.to
+      });
     });
 
     this.$scope.current = {

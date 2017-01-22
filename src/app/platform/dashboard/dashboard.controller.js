@@ -30,9 +30,11 @@ class DashboardController {
     this.selectedAPIs = [];
     this.selectedApplications = [];
     this.selectedEventTypes = [];
+    /*
     this.beginDate = moment().subtract(1, 'weeks').toDate();
     this.endDate = moment().toDate();
     this.now = moment().toDate();
+    */
 
     this.$scope.platformDashboard = [{
       col: 0,
@@ -149,27 +151,14 @@ class DashboardController {
     this.eventTypes = ['START_API', 'STOP_API', 'PUBLISH_API', 'UNPUBLISH_API'];
 
     this.initPagination();
-    this.getEvents = this.getEvents.bind(this);
+    this.searchEvents = this.searchEvents.bind(this);
 
-    /*
-    // init charts
-    this.$scope.paging = [];
-    this.analyticsData = this.analytics();
-    if ($state.params.from && $state.params.to) {
-      this.setRangeDate($state.params.from, $state.params.to);
-    } else if ($state.params.timeframe) {
-      this.setTimeframe($state.params.timeframe);
-    } else {
-      this.setTimeframe('7d');
-    }*/
-
-    // get data
-  //  this.updateCharts();
     // Refresh widget on each timeframe change
     this.$scope.$on('timeframeChange', function (event, timeframe) {
-      this.searchEvents();
-      console.log(event);
-      console.log(timeframe);
+      _that.lastFrom = timeframe.from;
+      _that.lastTo = timeframe.to;
+
+      _that.searchEvents();
     });
   }
 
@@ -202,16 +191,14 @@ class DashboardController {
     this.searchEvents();
   }
 
-  getEvents() {
-    this.searchEvents();
-  }
-
   searchEvents() {
+/*
     var from = moment(this.beginDate).unix() * 1000;
     var to = moment(this.endDate).unix() * 1000;
     if (from === to) {
       to = moment(this.endDate).add(24, 'hours').unix() * 1000;
     }
+*/
 
     // set apis
     var apis = this.selectedAPIs.map(function(api){ return api.id; }).join(",");
@@ -223,7 +210,7 @@ class DashboardController {
 
     // search
     this.$scope.eventsFetchData = true;
-    this.EventsService.search(types, apis, from, to, this.query.page - 1, this.query.limit).then(response => {
+    this.EventsService.search(types, apis, this.lastFrom, this.lastTo, this.query.page - 1, this.query.limit).then(response => {
       this.events = response.data;
       this.$scope.eventsFetchData = false;
     });
@@ -314,56 +301,6 @@ class DashboardController {
         _this.$scope.fetchData = false;
       });
     });
-  }
-
-  updateRangeDate() {
-    var from = moment(this.beginDate).unix() * 1000;
-    var to = moment(this.endDate).unix() * 1000;
-    this.$state.transitionTo(this.$state.current, {timeframe: '', from: from, to: to}, { notify: false });
-    this.setRangeDate(from, to);
-    this.updateCharts();
-    this.searchEvents();
-  }
-
-  setRangeDate(from, to) {
-    this.beginDate = moment.unix(from / 1000).toDate();
-    this.endDate = moment.unix(to / 1000).toDate();
-
-    this.analyticsData.range = {
-      interval: 3600000,
-      from: from,
-      to: to
-    };
-  }
-
-  updateTimeframe(timeframeId) {
-    if (timeframeId) {
-      this.$state.transitionTo(this.$state.current, {timeframe: timeframeId, from: '', to: ''}, { notify: false });
-      this.setTimeframe(timeframeId);
-      this.updateCharts();
-      this.searchEvents();
-    }
-  }
-
-  setTimeframe(timeframeId) {
-    var that = this;
-
-    this.timeframe = _.find(this.analyticsData.timeframes, function (timeframe) {
-      return timeframe.id === timeframeId;
-    });
-
-    var now = Date.now();
-
-    _.assignIn(this.analyticsData, {
-      timeframe: that.timeframe,
-      range: {
-        interval: that.timeframe.interval,
-        from: now - that.timeframe.range,
-        to: now
-      }
-    });
-    this.beginDate = moment(now - this.timeframe.range).toDate();
-    this.endDate = moment(now).toDate();
   }
 }
 
