@@ -102,9 +102,7 @@ class DashboardController {
         request: {
           type: "group_by",
           field: "api",
-          orderField: "response-time",
-          orderDirection: "desc",
-          orderType: "avg",
+          order: "-avg:response-time",
           size: 10000
         }
       }
@@ -122,9 +120,7 @@ class DashboardController {
         request: {
           type: "group_by",
           field: "api",
-          orderField: "proxy-latency",
-          orderDirection: "desc",
-          orderType: "avg",
+          order: "-avg:proxy-latency",
           size: 10000
         }
       }

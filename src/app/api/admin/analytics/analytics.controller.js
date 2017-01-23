@@ -39,7 +39,7 @@ class ApiAnalyticsController {
       }
     }, {
       col: 2,
-      row: 0,
+      row: 1,
       sizeY: 1,
       sizeX: 2,
       title: "Status",
@@ -54,8 +54,41 @@ class ApiAnalyticsController {
         colors: ['#42a5f5', '#66bb6a', '#ffee58', '#ef5350', '#8d6e63']
       }
     }, {
-      col: 0,
+      col: 3,
+      row: 0,
+      sizeY: 1,
+      sizeX: 2,
+      title: "Top slow applications",
+      chart: {
+        type: 'table',
+        columns: ['Application', 'Latency (in ms)'],
+        paging: 5,
+        request: {
+          type: "group_by",
+          field: "application",
+          order: "-avg:response-time",
+          size: 20
+        }
+      }
+    }, {
+      col: 1,
       row: 1,
+      sizeY: 1,
+      sizeX: 2,
+      title: "Top plan",
+      chart: {
+        type: 'table',
+        columns: ['Plan', 'Hits'],
+        paging: 5,
+        request: {
+          type: "group_by",
+          field: "plan",
+          size: 20
+        }
+      }
+    }, {
+      col: 0,
+      row: 2,
       sizeY: 1,
       sizeX: 4,
       title: "Response Status",
