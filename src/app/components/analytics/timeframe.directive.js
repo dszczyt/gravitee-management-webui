@@ -41,7 +41,7 @@ class TimeframeController {
           to: _that.$state.params.to
         });
       } else {
-        _that.setTimeframe('1d');
+        _that.setTimeframe(_that.$state.params.timeframe || '1d');
       }
     });
 
@@ -216,7 +216,7 @@ class TimeframeController {
     this.$state.transitionTo(
       this.$state.current,
       _.merge(this.$state.params, {
-        timeframe: timeframe.interval,
+        timeframe: timeframe.timeframe,
         interval: timeframe.interval,
         from: timeframe.from,
         to: timeframe.to

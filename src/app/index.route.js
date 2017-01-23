@@ -238,7 +238,7 @@ function routerConfig($stateProvider, $urlRouterProvider) {
       }
     })
     .state('apis.admin.analytics', {
-      url: '/analytics?from&to&interval',
+      url: '/analytics?from&to&interval&timeframe',
       templateUrl: 'app/api/admin/analytics/analytics.html',
       controller: 'ApiAnalyticsController',
       controllerAs: 'analyticsCtrl',
@@ -378,7 +378,7 @@ function routerConfig($stateProvider, $urlRouterProvider) {
       devMode: true
     })
     .state('applications.portal.analytics', {
-      url: '/analytics?from&to&interval',
+      url: '/analytics?from&to&interval&timeframe',
       templateUrl: 'app/application/details/analytics/analytics.html',
       controller: 'ApplicationAnalyticsController',
       controllerAs: 'analyticsCtrl',
@@ -448,7 +448,7 @@ function routerConfig($stateProvider, $urlRouterProvider) {
       }
     })
     .state('platform', {
-      url: '/platform?from&to',
+      url: '/platform?from&to&timeframe',
       templateUrl: 'app/platform/dashboard/dashboard.html',
       controller: 'DashboardController',
       controllerAs: 'dashboardCtrl',
