@@ -32,6 +32,7 @@ class TimeframeController {
   constructor($scope, $rootScope, $state, $timeout) {
     'ngInject';
     this.$scope = $scope;
+    this.now = moment().toDate();
 
     this.$scope.$on('timeframeReload', function () {
       if (_that.$state.params.interval && _that.$state.params.from && _that.$state.params.to) {
@@ -135,19 +136,6 @@ class TimeframeController {
     });
   }
 
-  updateDate(date) {
-    if (date) {
-      this.$state.transitionTo(
-        this.$state.current,
-        _.merge(this.$state.params, {
-          timestamp: date.getTime() / 1000,
-          timeframe: ''
-        }),
-        {notify: false});
-      this.setTimestamp(date.getTime() / 1000);
-    }
-  }
-
   updateTimeframe(timeframeId) {
     if (timeframeId) {
       this.$state.transitionTo(
@@ -221,6 +209,32 @@ class TimeframeController {
         to: timeframe.to
       }),
       {notify: false});
+
+    this.pickerStartDate = moment(timeframe.from).toDate();
+    this.pickerEndDate = moment(timeframe.to).toDate();
+  }
+
+  updateRangeDate() {
+    let _that = this;
+
+    let from =  moment(_that.pickerStartDate).startOf('day').unix() * 1000;
+    let to = moment(_that.pickerEndDate).endOf('day').unix() * 1000;
+
+    let diff = to - from;
+
+    let timeframe = _.findLast(_that.timeframes, function(timeframe) {
+      return timeframe.range < diff;
+    });
+
+    if (!timeframe) {
+      timeframe = _that.timeframes[0];
+    }
+
+    this.update({
+      interval: timeframe.interval,
+      from: from,
+      to: to
+    });
   }
 }
 
