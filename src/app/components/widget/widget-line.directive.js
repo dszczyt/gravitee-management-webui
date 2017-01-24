@@ -68,12 +68,6 @@ class WidgetChartLineDirective {
       plotOptions: {
         areaspline: {
           stacking: scope.$parent.chart.stacked ? 'normal' : null
-        },
-        series: {
-          /*
-          pointStart: timestamp.from,
-          pointInterval: timestamp.interval
-          */
         }
       },
       chart: {
@@ -120,12 +114,11 @@ class WidgetChartLineDirective {
             series: values,
             plotOptions: {
               series: {
-                pointStart: new Date(timestamp.from),
+                pointStart: timestamp.from,
                 pointInterval: timestamp.interval
               }
             }
           });
-
         } else {
           scope.result.series = [];
         }

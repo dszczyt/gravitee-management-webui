@@ -23,8 +23,6 @@ class WidgetDirective {
       },
       link: function link(scope, element) {
         scope.$watch(function () {
-            // console.log(angular.element(element[0])[0].firstElementChild);
-          console.log(angular.element(element[0])[0].firstElementChild);
             return element[0].scrollHeight ||
               angular.element(element[0])[0].firstElementChild.scrollHeight;
           },

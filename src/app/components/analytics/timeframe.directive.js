@@ -36,10 +36,9 @@ class TimeframeController {
 
     this.$scope.$on('timeframeReload', function () {
       let updated = false;
-      if (_that.$state.params.interval && _that.$state.params.from && _that.$state.params.to) {
+      if (_that.$state.params.from && _that.$state.params.to) {
         updated = true;
         _that.update({
-          interval: _that.$state.params.interval,
           from: _that.$state.params.from,
           to: _that.$state.params.to
         });
@@ -195,22 +194,32 @@ class TimeframeController {
       to: parseInt(timeframe.to)
     };
 
+    let diff = timeframe.to - timeframe.from;
+
+    let tf = _.findLast(that.timeframes, function(timeframe) {
+      return timeframe.range < diff;
+    });
+
+    if (!tf) {
+      tf = that.timeframes[0];
+    }
+
     this.$timeout(function () {
       that.$scope.$broadcast('timeframeChange', {
-        interval: timeframe.interval,
+        interval: tf.interval,
         from: timeframe.from,
         to: timeframe.to
       });
       that.$scope.$emit('timeframeChange', {
-        interval: timeframe.interval,
+        interval: tf.interval,
         from: timeframe.from,
         to: timeframe.to
       });
     }, 10);
 
     this.$scope.current = {
-      interval: timeframe.interval,
-      intervalLabel: moment.duration(timeframe.interval).humanize(),
+      interval: tf.interval,
+      intervalLabel: moment.duration(tf.interval).humanize(),
       from: timeframe.from,
       to: timeframe.to
     };
@@ -218,7 +227,7 @@ class TimeframeController {
     this.$state.transitionTo(
       this.$state.current,
       _.merge(this.$state.params, {
-        timeframe: timeframe.timeframe,
+        timeframe: tf.timeframe,
         interval: timeframe.interval,
         from: timeframe.from,
         to: timeframe.to
