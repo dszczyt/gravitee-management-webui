@@ -35,15 +35,17 @@ class TimeframeController {
     this.now = moment().toDate();
 
     this.$scope.$on('timeframeReload', function () {
+      let updated = false;
       if (_that.$state.params.interval && _that.$state.params.from && _that.$state.params.to) {
+        updated = true;
         _that.update({
           interval: _that.$state.params.interval,
           from: _that.$state.params.from,
           to: _that.$state.params.to
         });
-      } else {
-        _that.setTimeframe(_that.$state.params.timeframe || '1d');
       }
+
+      _that.setTimeframe(_that.$state.params.timeframe || '1d', ! updated);
     });
 
     this.$state = $state;
@@ -134,6 +136,10 @@ class TimeframeController {
         to: zoom.to
       });
     });
+
+    this.$rootScope.$on('queryUpdated', function (event, query) {
+      console.log(query);
+    });
   }
 
   updateTimeframe(timeframeId) {
@@ -145,7 +151,7 @@ class TimeframeController {
           timeframe: timeframeId
         }),
         {notify: false});
-      this.setTimeframe(timeframeId);
+      this.setTimeframe(timeframeId, true);
     }
   }
 
@@ -162,24 +168,33 @@ class TimeframeController {
     });
   }
 
-  setTimeframe(timeframeId) {
+  setTimeframe(timeframeId, update) {
     var that = this;
 
     this.timeframe = _.find(this.timeframes, function (timeframe) {
       return timeframe.id === timeframeId;
     });
 
-    var now = Date.now();
+    if (update) {
+      var now = Date.now();
 
-    this.update({
-      interval: that.timeframe.interval,
-      from: now - that.timeframe.range,
-      to: now
-    });
+      this.update({
+        interval: that.timeframe.interval,
+        from: now - that.timeframe.range,
+        to: now
+      });
+    }
   }
 
   update(timeframe) {
-    var that = this;
+    let that = this;
+
+    timeframe = {
+      interval: parseInt(timeframe.interval),
+      from: parseInt(timeframe.from),
+      to: parseInt(timeframe.to)
+    };
+
     this.$timeout(function () {
       that.$scope.$broadcast('timeframeChange', {
         interval: timeframe.interval,

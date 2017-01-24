@@ -120,11 +120,12 @@ class WidgetChartLineDirective {
             series: values,
             plotOptions: {
               series: {
-                pointStart: timestamp.from,
+                pointStart: new Date(timestamp.from),
                 pointInterval: timestamp.interval
               }
             }
           });
+
         } else {
           scope.result.series = [];
         }

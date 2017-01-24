@@ -22,14 +22,37 @@ class WidgetChartTableDirective {
     this.templateUrl = 'app/components/widget/table.html';
   }
 
+  controller($scope, $rootScope) {
+    this.$scope = $scope;
+    this.$rootScope = $rootScope;
+
+    $scope.selectItem = function() {
+      let query = _($scope.selected).map(item => $scope.$parent.chart.request.field + ':' + item.key).join(' or ');
+      $rootScope.$broadcast('queryUpdated', {
+        field: $scope.$parent.chart.request.field,
+        query: query
+      });
+    };
+
+    $scope.deselectItem = function() {
+      let query = _($scope.selected).map(item => $scope.$parent.chart.request.field + ':' + item.key).join(' or ');
+      $rootScope.$broadcast('queryUpdated', {
+        field: $scope.$parent.chart.request.field,
+        query: query
+      });
+    };
+  }
+
   link(scope) {
+    scope.selected = [];
+
     scope.$watch('data', function(data) {
       if (data) {
         scope.paging = 1;
         scope.results = _.map(data.values, function (value, key) {
           return {
             key: key,
-            count: value,
+            value: value,
             metadata: (data && data.metadata) ? data.metadata[key] : undefined
           };
         });

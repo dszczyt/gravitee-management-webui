@@ -54,7 +54,7 @@ class ApiAnalyticsController {
         colors: ['#42a5f5', '#66bb6a', '#ffee58', '#ef5350', '#8d6e63']
       }
     }, {
-      col: 3,
+      col: 2,
       row: 0,
       sizeY: 1,
       sizeX: 2,
@@ -71,13 +71,14 @@ class ApiAnalyticsController {
         }
       }
     }, {
-      col: 1,
+      col: 0,
       row: 1,
       sizeY: 1,
       sizeX: 2,
       title: "Top plan",
       chart: {
         type: 'table',
+        selectable: true,
         columns: ['Plan', 'Hits'],
         paging: 5,
         request: {
@@ -104,7 +105,7 @@ class ApiAnalyticsController {
       }
     }, {
       col: 0,
-      row: 2,
+      row: 3,
       sizeY: 1,
       sizeX: 4,
       title: "Response times",
@@ -120,7 +121,7 @@ class ApiAnalyticsController {
       }
     }, {
       col: 0,
-      row: 3,
+      row: 4,
       sizeY: 1,
       sizeX: 4,
       title: "Hits by application",
