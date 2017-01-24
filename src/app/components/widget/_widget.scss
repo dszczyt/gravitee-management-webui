@@ -1,5 +1,6 @@
 .widget-card {
   & > md-card-title {
+    cursor: move;
     padding-bottom: 0px;
     span.md-title {
       font-size: 12px;

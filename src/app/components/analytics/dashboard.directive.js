@@ -39,7 +39,8 @@ class DashboardController {
       columns: 4,
       swapping: false,
       draggable: {
-        handle: 'span'
+        enable: true,
+        handle: 'md-card-title'
       },
       resizable: {
         enabled: true,
