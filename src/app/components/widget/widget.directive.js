@@ -23,16 +23,14 @@ class WidgetDirective {
       },
       link: function link(scope, element) {
         scope.$watch(function () {
-            // console.log(angular.element(element[0])[0].firstElementChild);
-          console.log(angular.element(element[0])[0].firstElementChild);
             return element[0].scrollHeight ||
               angular.element(element[0])[0].firstElementChild.scrollHeight;
           },
           function (newVal) {
-            let rowHeightOption = 250;
+            let rowHeightOption = 300;
             let height = rowHeightOption * scope.widget.sizeY;
             if (newVal > height) {
-              // scope.widget.sizeY = Math.floor(newVal / rowHeightOption) + 1;
+              scope.widget.sizeY = Math.floor(newVal / rowHeightOption) + 1;
             }
           });
       }
