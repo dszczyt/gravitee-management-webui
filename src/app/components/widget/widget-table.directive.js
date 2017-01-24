@@ -49,6 +49,8 @@ class WidgetChartTableDirective {
     scope.$watch('data', function(data) {
       if (data) {
         scope.paging = 1;
+
+        console.log(data);
         scope.results = _.map(data.values, function (value, key) {
           return {
             key: key,
