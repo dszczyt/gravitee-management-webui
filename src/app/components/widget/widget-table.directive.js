@@ -26,19 +26,23 @@ class WidgetChartTableDirective {
     this.$scope = $scope;
     this.$rootScope = $rootScope;
 
-    $scope.selectItem = function() {
-      let query = _($scope.selected).map(item => $scope.$parent.chart.request.field + ':' + item.key).join(' or ');
-      $rootScope.$broadcast('queryUpdated', {
-        field: $scope.$parent.chart.request.field,
-        query: query
-      });
+    $scope.selectItem = function(item) {
+      $scope.updateQuery(item, true);
     };
 
-    $scope.deselectItem = function() {
-      let query = _($scope.selected).map(item => $scope.$parent.chart.request.field + ':' + item.key).join(' or ');
-      $rootScope.$broadcast('queryUpdated', {
+    $scope.deselectItem = function(item) {
+      $scope.updateQuery(item, false);
+    };
+
+    $scope.updateQuery = function(item, add) {
+//      let query = _($scope.selected).map(item => $scope.$parent.chart.request.field + ':' + item.key).join(' or ');
+
+      $rootScope.$broadcast('filterItemChange', {
+        widget: $scope.$parent.$parent.$parent.widget.$uid,
         field: $scope.$parent.chart.request.field,
-        query: query
+        key: item.key,
+        name: item.metadata.name,
+        mode: (add) ? 'add' : 'remove'
       });
     };
   }
@@ -49,8 +53,6 @@ class WidgetChartTableDirective {
     scope.$watch('data', function(data) {
       if (data) {
         scope.paging = 1;
-
-        console.log(data);
         scope.results = _.map(data.values, function (value, key) {
           return {
             key: key,

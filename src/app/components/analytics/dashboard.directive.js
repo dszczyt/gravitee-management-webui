@@ -34,6 +34,8 @@ class DashboardController {
   constructor($scope, $timeout, $rootScope) {
     'ngInject';
 
+    let _that = this;
+
     $scope.dashboardOptions = {
       margins: [20, 20],
       columns: 4,
@@ -49,10 +51,24 @@ class DashboardController {
         }
       }
     };
+    
+    _.each(this.model, function(widget) {
+      widget.$uid = _that.guid();
+    });
 
     $timeout(function(){
       $rootScope.$broadcast('timeframeReload');
     });
+  }
+
+  guid() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+      s4() + '-' + s4() + s4() + s4();
   }
 }
 

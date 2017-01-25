@@ -117,6 +117,7 @@ import WidgetChartLineDirective from './components/widget/widget-line.directive'
 import WidgetChartPieDirective from './components/widget/widget-pie.directive';
 import DashboardDirective from './components/analytics/dashboard.directive';
 import TimeframeDirective from './components/analytics/timeframe.directive';
+import AnalyticsFilterDirective from './components/analytics/filter.directive';
 
 angular.module('gravitee', ['ui.router', 'ngMaterial', 'ramlConsoleApp', 'ng-showdown', 'swaggerUi',
   'ngMdIcons', 'ui.codemirror', 'md.data.table', 'ngCookies', 'dragularModule', 'readMore',
@@ -242,6 +243,7 @@ angular.module('gravitee', ['ui.router', 'ngMaterial', 'ramlConsoleApp', 'ng-sho
   .directive('graviteeChartLine', () => new WidgetChartLineDirective())
   .directive('graviteeDashboard', () => new DashboardDirective())
   .directive('graviteeTimeframe', () => new TimeframeDirective())
+  .directive('graviteeAnalyticsFilter', () => new AnalyticsFilterDirective())
   .filter('humanDateFilter', function () {
     return function(input) {
       if (!moment().subtract(1, 'weeks').isAfter(input)) {
