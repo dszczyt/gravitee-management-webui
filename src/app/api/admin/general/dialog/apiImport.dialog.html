@@ -16,12 +16,12 @@
 
 -->
 <md-dialog style="min-width:60%;">
-  <form name="formApiDefinition" ng-submit="dialogApiDefinitionCtrl.import()" novalidate>
+  <form name="formApiDefinition" ng-submit="dialogApiImportCtrl.import()" novalidate>
   <md-toolbar>
     <div class="md-toolbar-tools">
       <h2>Import an API definition</h2>
       <span flex></span>
-      <md-button type="button" class="md-icon-button" ng-click="dialogApiDefinitionCtrl.hide()">
+      <md-button type="button" class="md-icon-button" ng-click="dialogApiImportCtrl.hide()">
         X
       </md-button>
     </div>
@@ -35,7 +35,7 @@
     </div>
   </md-dialog-content>
   <div class="md-actions" layout="row">
-    <md-button type="button" md-no-ink class="md-primary" ng-click="dialogApiDefinitionCtrl.hide()" style="margin-right:20px;">
+    <md-button type="button" md-no-ink class="md-primary" ng-click="dialogApiImportCtrl.hide()" style="margin-right:20px;">
       Close
     </md-button>
     <md-button class="md-raised" type="submit" ng-disabled="formApiDefinition.$invalid">
