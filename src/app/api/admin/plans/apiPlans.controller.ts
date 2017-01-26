@@ -13,18 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import _ = require('lodash');
+import angular = require('angular');
+
 class ApiPlansController {
-  constructor(resolvedPlans, $mdSidenav, $mdDialog, $scope, ApiService, $state, $stateParams, NotificationService, dragularService) {
+  private plans: any;
+  private dndEnabled: boolean;
+  private statusFilters: string[];
+  private selectedStatus: string[];
+  private securityTypes: {id: string; name: string}[];
+  private countByStatus: any;
+  private filteredPlans: any;
+  constructor(
+    private resolvedPlans,
+    private $mdSidenav,
+    private $mdDialog,
+    private $scope,
+    private ApiService,
+    private $state,
+    private $stateParams,
+    private NotificationService,
+    private dragularService
+  ) {
     'ngInject';
     this.plans = resolvedPlans.data;
-    this.$mdSidenav = $mdSidenav;
-    this.$mdDialog = $mdDialog;
-    this.$scope = $scope;
-    this.ApiService = ApiService;
-    this.$state = $state;
-    this.$stateParams = $stateParams;
-    this.NotificationService = NotificationService;
-    this.DragularService = dragularService;
     this.dndEnabled = true;
     this.statusFilters = ['staging', 'published', 'closed'];
     this.selectedStatus = ['published'];
@@ -93,7 +105,7 @@ class ApiPlansController {
   init() {
     let that = this;
     let d = document.querySelector('.plans');
-    this.DragularService([d], {
+    this.dragularService([d], {
       moves: function () {
         return that.dndEnabled;
       },
@@ -142,7 +154,7 @@ class ApiPlansController {
   applyFilters() {
     this.countPlansByStatus();
     var that = this;
-    this.filteredPlans = _.filter(this.plans, function (plan) {
+    this.filteredPlans = _.filter(this.plans, function (plan: any) {
       return _.includes(that.selectedStatus, plan.status);
     });
   }
@@ -181,7 +193,7 @@ class ApiPlansController {
       '/': []
     };
     // set resource filtering whitelist
-    _.remove(this.$scope.resourceFiltering.whitelist, function (whitelistItem) {
+    _.remove(this.$scope.resourceFiltering.whitelist, function (whitelistItem: any) {
       return !whitelistItem.pattern;
     });
     if (this.$scope.resourceFiltering.whitelist.length) {
@@ -230,7 +242,7 @@ class ApiPlansController {
   }
 
   planAlreadyCreated(planId) {
-    return _.some(this.plans, function (plan) {
+    return _.some(this.plans, function (plan: any) {
       return plan.id === planId;
     });
   }
