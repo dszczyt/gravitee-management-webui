@@ -16,15 +16,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import angular = require('angular');
+import _ = require('lodash');
+
 class ApiMembersController {
-  constructor (ApiService, resolvedApi, resolvedMembers, $state, $mdDialog, NotificationService, $scope, UserService, GroupService) {
+  private api: any;
+  private members: any;
+  private membershipTypes: any;
+  private newPrimaryOwner: any;
+  private groupMembers: any;
+  constructor (
+    private ApiService,
+    private resolvedApi,
+    private resolvedMembers,
+    private $state,
+    private $mdDialog: ng.material.IDialogService,
+    private NotificationService,
+    private $scope,
+    private UserService,
+    private GroupService
+  ) {
     'ngInject';
-    this.ApiService = ApiService;
-    this.$mdDialog = $mdDialog;
-    this.NotificationService = NotificationService;
-    this.UserService = UserService;
-    this.$scope = $scope;
-    this.$state = $state;
     this.api = resolvedApi.data;
     this.members = resolvedMembers.data;
     this.membershipTypes = [ 'owner', 'user' ];
@@ -61,19 +73,19 @@ class ApiMembersController {
   }
 
   showAddMemberModal(ev) {
-    var _this = this;
     this.$mdDialog.show({
       controller: 'DialogAddMemberApiController',
       templateUrl: 'app/api/admin/members/addMember.dialog.html',
       parent: angular.element(document.body),
       targetEvent: ev,
       clickOutsideToClose: true,
-      api: _this.api,
-			apiMembers: _this.members
-    }).then(function (api) {
+      // TODO: reinject these keys :
+      // api: this.api,
+      // apiMembers: this.members
+    }).then((api) => {
       if (api) {
-				_this.ApiService.getMembers(api.id).then(function(response) {
-					_this.members = response.data;
+				this.ApiService.getMembers(api.id).then((response) => {
+					this.members = response.data;
 				});
       }
     }, function() {
@@ -108,20 +120,19 @@ class ApiMembersController {
 
   searchUser(query) {
     if (query) {
-      var _this = this;
-      return this.UserService.search(query).then(function(response) {
+      return this.UserService.search(query).then((response) => {
         var usersFound = response.data;
-        var filterUsers = _.filter(usersFound, function(user) {
-          return _.findIndex(_this.members,
-              function(apiMember) {
+        var filterUsers = _.filter(usersFound, (user:any) => {
+          return _.findIndex(this.members,
+              function(apiMember: any) {
                 return apiMember.username === user.id && apiMember.type === 'primary_owner';
               }) === -1;
         });
         return filterUsers;
       });
     } else {
-      var filterMembers = _.filter(this.members, function(member) { return member.type !== 'primary_owner'; });
-      var members = _.flatMap(filterMembers, function(member) { return { 'id' : member.username}; });
+      var filterMembers = _.filter(this.members, function(member: any) { return member.type !== 'primary_owner'; });
+      var members = _.flatMap(filterMembers, function(member: any) { return { 'id' : member.username}; });
       return members;
     }
   }
@@ -137,18 +148,17 @@ class ApiMembersController {
   }
 
   showTransferOwnershipConfirm(ev) {
-    var _this = this;
     this.$mdDialog.show({
       controller: 'DialogTransferApiController',
       templateUrl: 'app/api/admin/members/transferAPI.dialog.html',
       parent: angular.element(document.body),
       targetEvent: ev,
       clickOutsideToClose:true
-    }).then(function (transferAPI) {
+    }).then((transferAPI) => {
       if (transferAPI) {
-        _this.transferOwnership();
+        this.transferOwnership();
       }
-    }, function() {
+    }, () => {
       // You cancelled the dialog
     });
   }

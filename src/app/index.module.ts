@@ -112,6 +112,7 @@ import TagsController from './configuration/admin/tags/tags.controller';
 import TagService from './services/tag.service';
 import DeleteTagDialogController from './configuration/admin/tags/delete.tag.dialog.controller';
 import ChartDirective from './components/chart/chart.directive';
+import angular = require("angular");
 
 angular.module('gravitee', ['ui.router', 'ngMaterial', 'ramlConsoleApp', 'ng-showdown', 'swaggerUi',
   'ngMdIcons', 'ui.codemirror', 'md.data.table', 'ngCookies', 'dragularModule', 'readMore',
@@ -219,7 +220,7 @@ angular.module('gravitee', ['ui.router', 'ngMaterial', 'ramlConsoleApp', 'ng-sho
   .service('GroupService', GroupService)
   .service('SubscriptionService', SubscriptionService)
   .service('TagService', TagService)
-  .directive('filecontent', () => new DocumentationDirective())
+  .directive('filecontent', DocumentationDirective)
   .directive('graviteeSidenav', () => new SideNavDirective())
   .directive('graviteePage', () => new PageDirective())
   .directive('noDirtyCheck', () => new FormDirective())

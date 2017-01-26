@@ -13,32 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class DocumentationDirective {
-  constructor() {
-    'ngInject';
 
-    let directive = {
-      scope: {
-        filecontent: '=',
-        filename: '='
-      },
-      link: function (scope, element) {
-        element.bind('change', function (changeEvent) {
-          let reader = new FileReader();
-          var file = changeEvent.target.files[0];
-          reader.onload = function (loadEvent: any) {
-            scope.$apply(function () {
-              scope.filecontent = loadEvent.target.result;
-              scope.filename = file.name;
-            });
-          };
-          reader.readAsText(file);
+export const DocumentationDirective: ng.IDirectiveFactory = () => ({
+  scope: {
+    filecontent: '=',
+    filename: '='
+  },
+  link: function (scope: any, element: ng.IRootElementService) {
+    element.bind('change', function (changeEvent: any) {
+      let reader = new FileReader();
+      const file = changeEvent.target.files[0];
+      reader.onload = function (loadEvent: any) {
+        scope.$apply(function () {
+          scope.filecontent = loadEvent.target.result;
+          scope.filename = file.name;
         });
-      }
-    };
-
-    return directive;
+      };
+      reader.readAsText(file);
+    });
   }
-}
-
-export default DocumentationDirective;
+});

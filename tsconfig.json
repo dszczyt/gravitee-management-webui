@@ -10,6 +10,7 @@
       "angular-ui-router",
       "angular",
       "angular-mocks",
+      "angular-material",
       "jquery",
       "node",
       "jasmine",

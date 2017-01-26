@@ -13,16 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import _ = require('lodash');
+
 class ApiHistoryController {
-  constructor ($mdDialog, $scope, $window, $rootScope, $state, ApiService, NotificationService, resolvedEvents) {
+  private api: any;
+  private events: any;
+  private eventsSelected: any;
+  private eventsTimeline: any;
+  private eventsToCompare: any;
+  private eventSelected: any;
+  private diffMode: boolean;
+  private eventToCompareRequired: boolean;
+  private eventTypes: string;
+  private apisSelected: any;
+  private eventSelectedPayloadDefinition: any;
+  private eventSelectedPayload: any;
+  private right: any;
+  private left: any;
+
+  constructor (
+    private $mdDialog: ng.material.IDialogService,
+    private $scope: any,
+    private $rootScope: ng.IRootScopeService,
+    private $state: ng.ui.IStateService,
+    private ApiService,
+    private NotificationService,
+    private resolvedEvents
+  ) {
     'ngInject';
-    this.$mdDialog = $mdDialog;
-    this.$scope = $scope;
-    this.$window = $window;
-    this.$rootScope = $rootScope;
-    this.$state = $state;
-    this.ApiService = ApiService;
-    this.NotificationService = NotificationService;
     this.api = _.cloneDeep(this.$scope.$parent.apiCtrl.api);
     this.events = resolvedEvents.data;
     this.eventsSelected = [];

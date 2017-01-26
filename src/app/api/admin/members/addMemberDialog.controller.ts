@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import _ = require('lodash');
+
 function DialogAddMemberApiController($scope, $mdDialog, api, apiMembers, ApiService, UserService, NotificationService) {
   'ngInject';
 
@@ -31,9 +33,9 @@ function DialogAddMemberApiController($scope, $mdDialog, api, apiMembers, ApiSer
 		if (query) {
 			return UserService.search(query).then(function(response) {
 				var membersFound = response.data;
-        var filterMembers = _.filter(membersFound, function(member) {
+        var filterMembers = _.filter(membersFound, function(member:any) {
           return _.findIndex($scope.apiMembers,
-                              function(apiMember) { return apiMember.username === member.id;}) === -1;
+                              function(apiMember:any) { return apiMember.username === member.id;}) === -1;
         });
 				return filterMembers;
 			});
