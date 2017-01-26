@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import _ = require('lodash');
 import moment = require("moment");
 class ApiAnalyticsController {
   private api: any;
@@ -20,6 +21,12 @@ class ApiAnalyticsController {
   private colorByBucket: string[];
   private bgColorByBucket: string[];
   private timeframe: any;
+  private reportsFetched: any;
+  private topsFetched: any;
+  private indicators: any;
+  private total: any;
+  private indicatorsFetched: any;
+  private indicatorChartData: any;
 
   constructor(private $log, private ApiService, private resolvedApi, private $q, private $scope, private $state) {
     'ngInject';
@@ -131,7 +138,7 @@ class ApiAnalyticsController {
   setTimeframe(timeframeId) {
     var that = this;
 
-    this.timeframe = _.find(this.analyticsData.timeframes, function (timeframe) {
+    this.timeframe = _.find(this.analyticsData.timeframes, function (timeframe: any) {
       return timeframe.id === timeframeId;
     });
 
@@ -156,17 +163,16 @@ class ApiAnalyticsController {
   }
 
   pushHitsByData(report, response) {
-    let that = this;
     let data = [], i = 0;
-    _.forEach(report.requests, function (request) {
+    _.forEach(report.requests, (request) => {
       let currentResponse = response[i];
       if (currentResponse) {
         if (currentResponse.data.values[0]) {
-          _.forEach(currentResponse.data.values[0].buckets, function (bucket) {
+          _.forEach(currentResponse.data.values[0].buckets, (bucket) => {
             if (bucket) {
               i++;
-              let lineColor = report.id === 'response-status' ? that.getColorByStatus(bucket.name) : that.colorByBucket[i % that.colorByBucket.length];
-              let bgColor = report.id === 'response-status' ? that.getBgColorByStatus(bucket.name) : that.bgColorByBucket[i % that.bgColorByBucket.length];
+              let lineColor = report.id === 'response-status' ? this.getColorByStatus(bucket.name) : this.colorByBucket[i % this.colorByBucket.length];
+              let bgColor = report.id === 'response-status' ? this.getBgColorByStatus(bucket.name) : this.bgColorByBucket[i % this.bgColorByBucket.length];
               let label = request.label ? request.label : (report.label || bucket.name);
               if (report.id === 'applications') {
                 let application = currentResponse.data.metadata[bucket.name];
@@ -199,8 +205,8 @@ class ApiAnalyticsController {
       });
 
       // sort by configured reports
-      this.$scope.chartConfig = _.sortBy(this.$scope.chartConfig, function (report) {
-        return _.findIndex(that.analyticsData.reports, {title: report.title.text});
+      this.$scope.chartConfig = _.sortBy(this.$scope.chartConfig, (report: any) => {
+        return _.findIndex(this.analyticsData.reports, {title: report.title.text});
       });
     }
   }
@@ -237,10 +243,9 @@ class ApiAnalyticsController {
   }
 
   updateCharts() {
-    var _this = this;
     this.initDataFetching();
 
-    var queryFilter = '';
+    let queryFilter = '';
     if (this.$scope.filteredApplications.length) {
       queryFilter = ' AND(';
       for (var i = 0; i < this.$scope.filteredApplications.length; i++) {
@@ -248,72 +253,72 @@ class ApiAnalyticsController {
       }
     }
 
-    _.forEach(this.analyticsData.reports, function (report) {
-      var requests = _.map(report.requests, function (req) {
-        return req.service.call(_this.ApiService, _this.api.id,
+    _.forEach(this.analyticsData.reports, report => {
+      let requests = _.map(report.requests, function (req: any) {
+        return req.service.call(this.ApiService, this.api.id,
           req.key,
           req.query + queryFilter,
           req.field,
           req.aggType,
-          _this.analyticsData.range.from,
-          _this.analyticsData.range.to,
-          _this.analyticsData.range.interval);
+          this.analyticsData.range.from,
+          this.analyticsData.range.to,
+          this.analyticsData.range.interval);
       });
 
-      _this.$q.all(requests).then(response => {
-        _this.dataFetched(_this.reportsFetched, report.key);
+      this.$q.all(requests).then(response => {
+        this.dataFetched(this.reportsFetched, report.key);
 
         // Push data for hits by 'something'
         if (response[0] && response[0].data.values) {
           if (report.id === 'applications') {
-            _this.fetchApplicationAnalytics(report, response);
+            this.fetchApplicationAnalytics(report, response);
           } else {
-            _this.pushHitsByData(report, response);
+            this.pushHitsByData(report, response);
           }
         }
       });
     });
 
     // indicators
-    _this.indicators = [];
+    this.indicators = [];
     // first we need to get total calls to produce ratios
-    var totalIndicator = _.find(_this.analyticsData.indicators, 'isTotal');
-    var request = totalIndicator.request.call(this.ApiService, this.api.id,
-      _this.analyticsData.range.from,
-      _this.analyticsData.range.to,
-      _this.analyticsData.range.interval,
+    let totalIndicator: any = _.find(this.analyticsData.indicators, 'isTotal');
+    let request = totalIndicator.request.call(this.ApiService, this.api.id,
+      this.analyticsData.range.from,
+      this.analyticsData.range.to,
+      this.analyticsData.range.interval,
       totalIndicator.key,
       totalIndicator.query + queryFilter);
 
     let data = [];
 
     request.then(response => {
-      _this.dataFetched(_this.indicatorsFetched, 'total');
+      this.dataFetched(this.indicatorsFetched, 'total');
       totalIndicator.value = response.data.hits;
       this.total = totalIndicator.value;
 
       // then we get other indicators
-      var indicators = _.filter(this.analyticsData.indicators, function (indicator) {
+      let indicators: any = _.filter(this.analyticsData.indicators, function (indicator: any) {
         return !indicator.isTotal;
       });
 
       let i = 0;
 
-      delete _this.indicatorChartData;
-      _.forEach(indicators, function (indicator) {
-        var request = indicator.request.call(_this.ApiService, _this.api.id,
-          _this.analyticsData.range.from,
-          _this.analyticsData.range.to,
-          _this.analyticsData.range.interval,
+      delete this.indicatorChartData;
+      _.forEach(indicators, (indicator) => {
+        var request = indicator.request.call(this.ApiService, this.api.id,
+          this.analyticsData.range.from,
+          this.analyticsData.range.to,
+          this.analyticsData.range.interval,
           indicator.key,
           indicator.query + queryFilter);
 
         request.then(response => {
-          _this.dataFetched(_this.indicatorsFetched, indicator.key);
+          this.dataFetched(this.indicatorsFetched, indicator.key);
           indicator.value = response.data.hits;
           i++;
           if (indicator.value !== undefined) {
-            let percentage = _.round(indicator.value / _this.total * 100);
+            let percentage = _.round(indicator.value / this.total * 100);
             if (percentage !== 0) {
               data.push({
                 name: indicator.title + ': (' + percentage + '%) ' + indicator.value + ' hits',
@@ -322,11 +327,11 @@ class ApiAnalyticsController {
               });
             }
 
-            if (indicators.length === i && _.filter(indicators, function (indicator) {
+            if (indicators.length === i && _.filter(indicators, (indicator: any) => {
                 return indicator.value !== 0;
               }).length) {
-              _this.indicatorChartData = {
-                title: {text: _this.total + ' hits'},
+              this.indicatorChartData = {
+                title: {text: this.total + ' hits'},
                 series: [{
                   name: 'Percent hits',
                   data: data
@@ -345,33 +350,32 @@ class ApiAnalyticsController {
   }
 
   initDataFetching() {
-    var _this = this;
     this.topsFetched = {};
     this.reportsFetched = {};
     this.indicatorsFetched = {};
-    _.forEach(this.analyticsData.tops, function (top) {
-      _this.topsFetched[top.key] = false;
+    _.forEach(this.analyticsData.tops, top =>{
+      this.topsFetched[top.key] = false;
     });
-    _.forEach(this.analyticsData.reports, function (report) {
-      _this.reportsFetched[report.key] = false;
+    _.forEach(this.analyticsData.reports, report =>{
+      this.reportsFetched[report.key] = false;
     });
-    _.forEach(this.analyticsData.indicators, function (indicator) {
-      _this.indicatorsFetched[indicator.key] = false;
+    _.forEach(this.analyticsData.indicators, indicator =>{
+      this.indicatorsFetched[indicator.key] = false;
     });
     this.$scope.fetchDone = false;
-    _this.$scope.chartConfig = [];
+    this.$scope.chartConfig = [];
   }
 
   setUpDataFetchSettings() {
     // data fetching settings
-    var _this = this;
     this.$scope.fetchDone = true;
-    this.$scope.$on('dataFetched', function () {
-      var analyticsFetched = {};
-      analyticsFetched.tops = _.every(_this.topsFetched, Boolean);
-      analyticsFetched.reports = _.every(_this.reportsFetched, Boolean);
-      analyticsFetched.indicators = _.every(_this.indicatorsFetched, Boolean);
-      _this.$scope.fetchDone = _.every(analyticsFetched, Boolean);
+    this.$scope.$on('dataFetched', () =>{
+      let analyticsFetched = {
+        tops: _.every(this.topsFetched, Boolean),
+        reports: _.every(this.reportsFetched, Boolean),
+        indicators: _.every(this.indicatorsFetched, Boolean)
+      };
+      this.$scope.fetchDone = _.every(analyticsFetched, Boolean);
     });
   }
 
