@@ -1,9 +1,4 @@
-node_modules/
-.sass-cache/
-.idea/
 .tmp/
-/dist/
-target/
-.settings/
-.project
-*.iml
+coverage/
+dist/
+node_modules/

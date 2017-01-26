@@ -14,28 +14,35 @@
  * limitations under the License.
  */
 class NewApiController {
-  constructor($scope, $state, $stateParams, $window, $q, $timeout, ApiService, NotificationService) {
+  private api: any;
+  private vm: {
+    selectedStep: number;
+    stepProgress: number;
+    maxStep: number;
+    showBusyText: boolean;
+    stepData: {
+      step: number;
+      completed: boolean;
+      optional: boolean;
+      data: any
+    }[]
+  };
+
+  constructor(private $stateParams, private $window, private ApiService, private NotificationService) {
     'ngInject';
-    this.$scope = $scope;
-    this.$state = $state;
-    this.$stateParams = $stateParams;
-    this.$window = $window;
-    this.$q = $q;
-    this.$timeout = $timeout;
-    this.ApiService = ApiService;
-    this.NotificationService = NotificationService;
 
     this.api = _.clone(this.$stateParams.api);
 
-    this.vm = {};
-
-    this.vm.selectedStep = 0;
-    this.vm.stepProgress = 1;
-    this.vm.maxStep = 2;
-    this.vm.showBusyText = false;
-    this.vm.stepData = [
-      {step: 1, completed: false, optional: false, data: {}},
-      {step: 2, completed: false, optional: false, data: {}}];
+    this.vm = {
+      selectedStep: 0,
+      stepProgress: 1,
+      maxStep: 2,
+      showBusyText: false,
+      stepData: [
+        {step: 1, completed: false, optional: false, data: {}},
+        {step: 2, completed: false, optional: false, data: {}}
+      ]
+    };
   }
 
   enableNextStep() {
@@ -60,20 +67,18 @@ class NewApiController {
     this.vm.showBusyText = true;
 
     if (!stepData.completed) {
-      var _this = this;
-
       if (this.vm.selectedStep !== 1) {
-        _this.vm.showBusyText = false;
+        this.vm.showBusyText = false;
         //move to next step when success
         stepData.completed = true;
-        _this.enableNextStep();
+        this.enableNextStep();
       } else {
-        this.ApiService.create(this.api).then(function (api) {
-          _this.vm.showBusyText = false;
-          _this.NotificationService.show('API created');
-          _this.$window.location.href = '#/apis/' + api.data.id + '/settings/general';
+        this.ApiService.create(this.api).then((api) => {
+          this.vm.showBusyText = false;
+          this.NotificationService.show('API created');
+          this.$window.location.href = `#/apis/${api.data.id}/settings/general`;
         }).catch(function () {
-          _this.vm.showBusyText = false;
+          this.vm.showBusyText = false;
         });
       }
     } else {

@@ -13,8 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import moment = require("moment");
 class ApiAnalyticsController {
-  constructor($log, ApiService, resolvedApi, $q, $scope, $state) {
+  private api: any;
+  private analyticsData: any;
+  private colorByBucket: string[];
+  private bgColorByBucket: string[];
+  private timeframe: any;
+
+  constructor(private $log, private ApiService, private resolvedApi, private $q, private $scope, private $state) {
     'ngInject';
     this.$log = $log;
     this.ApiService = ApiService;
@@ -199,20 +206,19 @@ class ApiAnalyticsController {
   }
 
   pushTopHitsData() {
-    var _this = this;
-    _.forEach(this.analyticsData.tops, function (top) {
+    _.forEach(this.analyticsData.tops, (top) => {
       if (top.key === 'top-apps') {
-        var request = top.request.call(_this.ApiService, _this.api.id,
-          _this.analyticsData.range.from,
-          _this.analyticsData.range.to,
-          _this.analyticsData.range.interval,
+        var request = top.request.call(this.ApiService, this.api.id,
+          this.analyticsData.range.from,
+          this.analyticsData.range.to,
+          this.analyticsData.range.interval,
           top.key,
           top.query,
           top.field,
           top.size);
 
         request.then(response => {
-          _this.dataFetched(_this.topsFetched, top.key);
+          this.dataFetched(this.topsFetched, top.key);
           if (response.data.values && Object.keys(response.data.values).length) {
             top.results = _.map(response.data.values, function (value, key) {
               return {
@@ -221,7 +227,7 @@ class ApiAnalyticsController {
                 metadata: (response.data && response.data.metadata) ? response.data.metadata[key] : undefined
               };
             });
-            _this.$scope.paging[top.key] = 1;
+            this.$scope.paging[top.key] = 1;
           } else {
             delete top.results;
           }

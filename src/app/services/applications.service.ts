@@ -13,19 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+interface IMember {
+  username: string;
+  type: string;
+}
+
 class ApplicationService {
-  constructor($http, Constants, $q) {
-		'ngInject';
-    this.$q = $q;
-    this.$http = $http;
-		this.baseURL = Constants.baseURL;
-    this.applicationsURL = this.baseURL + 'applications/';
-    this.subscriptionsURL = function(applicationId) {
-      return this.applicationsURL + applicationId + '/subscriptions/';
-    };
+  private baseURL: string;
+  private applicationsURL: string;
+
+  constructor(private $http: ng.IHttpService, private $q: ng.IQService) {
+		this.baseURL = '/management';
+    this.applicationsURL = `${this.baseURL}applications/`;
   }
 
-	get(applicationId) {
+  private subscriptionsURL(applicationId: string): string {
+    return `${this.applicationsURL}${applicationId}/subscriptions/`;
+  }
+
+	get(applicationId: string) {
     return this.$http.get(this.applicationsURL + applicationId);
   }
 
@@ -33,8 +40,9 @@ class ApplicationService {
 		return this.$http.get(this.applicationsURL + applicationId + '/members');
 	}
 
-	addOrUpdateMember(applicationId, member) {
-		return this.$http.post(this.applicationsURL + applicationId + '/members?user=' + member.username + '&type=' + member.type);
+	addOrUpdateMember(applicationId: string, member: IMember): ng.IHttpPromise<any> {
+    const url = `${this.applicationsURL}${applicationId}/members?user=${member.username}&type=${member.type}`;
+    return this.$http.post(url, '');
 	}
 
 	deleteMember(applicationId, memberUsername) {
@@ -65,7 +73,7 @@ class ApplicationService {
     );
   }
 
-  delete(application) {
+  delete(application): ng.IHttpPromise<any> {
     return this.$http.delete(this.applicationsURL + application.id);
   }
 
@@ -75,8 +83,8 @@ class ApplicationService {
 
   // Plans
 
-  subscribe(applicationId, planId) {
-    return this.$http.post(this.subscriptionsURL(applicationId) + '?plan=' + planId);
+  subscribe(applicationId, planId): ng.IHttpPromise<any> {
+    return this.$http.post(this.subscriptionsURL(applicationId) + '?plan=' + planId, '');
   }
 
   listSubscriptions(applicationId, planId) {
