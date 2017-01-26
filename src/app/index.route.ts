@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-function routerConfig($stateProvider, $urlRouterProvider) {
+function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider) {
   'ngInject';
   $stateProvider
     .state('home', {
@@ -21,7 +21,9 @@ function routerConfig($stateProvider, $urlRouterProvider) {
       controller: function ($state) {
         $state.go('apis.list');
       },
-      devMode: true
+      data: {
+        devMode: true
+      }
     })
     .state('apis', {
       url: '/apis',
@@ -46,12 +48,14 @@ function routerConfig($stateProvider, $urlRouterProvider) {
           return ApiService.list();
         }
       },
-      menu: {
-        label: 'APIs',
-        icon: 'dashboard',
-        firstLevel: true
-      },
-      devMode: true
+      data: {
+        menu: {
+          label: 'APIs',
+          icon: 'dashboard',
+          firstLevel: true
+        },
+        devMode: true
+      }
     })
     .state('apis.portal', {
       abstract: true,
@@ -75,11 +79,13 @@ function routerConfig($stateProvider, $urlRouterProvider) {
           return DocumentationService.list($stateParams.apiId);
         }
       },
-      menu: {
-        label: 'Documentation',
-        icon: 'insert_drive_file'
-      },
-      devMode: true
+      data: {
+        menu: {
+          label: 'Documentation',
+          icon: 'insert_drive_file'
+        },
+        devMode: true
+      }
     })
     .state('apis.portal.pages.page', {
       url: '/:pageId',
@@ -91,7 +97,9 @@ function routerConfig($stateProvider, $urlRouterProvider) {
           return DocumentationService.get($stateParams.apiId, $stateParams.pageId);
         }
       },
-      devMode: true
+      data: {
+        devMode: true
+      }
     })
     .state('apis.portal.plans', {
       url: '/plans',
@@ -103,9 +111,11 @@ function routerConfig($stateProvider, $urlRouterProvider) {
           return ApiService.listPlans($stateParams.apiId);
         }
       },
-      menu: {
-        label: 'Plans',
-        icon: 'view_week'
+      data: {
+        menu: {
+          label: 'Plans',
+          icon: 'view_week'
+        }
       }
     })
     .state('apis.admin', {
@@ -124,14 +134,16 @@ function routerConfig($stateProvider, $urlRouterProvider) {
       }
     })
     .state('apis.admin.general', {
-      abtract: true,
+      abstract: true,
       url: '',
       templateUrl: 'app/api/admin/general/api.html',
       controller: 'ApiGeneralController',
       controllerAs: 'generalCtrl',
-      menu: {
-        label: 'Global settings',
-        icon: 'blur_on'
+      data: {
+        menu: {
+          label: 'Global settings',
+          icon: 'blur_on'
+        }
       }
     })
     .state('apis.admin.general.main', {
@@ -162,9 +174,11 @@ function routerConfig($stateProvider, $urlRouterProvider) {
           return ApiService.getApiPlans($stateParams.apiId);
         }
       },
-      menu: {
-        label: 'Plans',
-        icon: 'view_week'
+      data: {
+        menu: {
+          label: 'Plans',
+          icon: 'view_week'
+        }
       }
     })
     .state('apis.admin.subscriptions', {
@@ -177,9 +191,11 @@ function routerConfig($stateProvider, $urlRouterProvider) {
           return ApiService.getSubscriptions($stateParams.apiId);
         }
       },
-      menu: {
-        label: 'Subscriptions',
-        icon: 'vpn_key'
+      data: {
+        menu: {
+          label: 'Subscriptions',
+          icon: 'vpn_key'
+        }
       }
     })
     .state('apis.admin.resources', {
@@ -187,9 +203,11 @@ function routerConfig($stateProvider, $urlRouterProvider) {
       templateUrl: 'app/api/admin/resources/resources.html',
       controller: 'ApiResourcesController',
       controllerAs: 'apiResourcesCtrl',
-      menu: {
-        label: 'Resources',
-        icon: 'style'
+      data: {
+        menu: {
+          label: 'Resources',
+          icon: 'style'
+        }
       }
     })
     .state('apis.admin.policies', {
@@ -197,9 +215,11 @@ function routerConfig($stateProvider, $urlRouterProvider) {
       templateUrl: 'app/api/admin/policies/apiPolicies.html',
       controller: 'ApiPoliciesController',
       controllerAs: 'apiPoliciesCtrl',
-      menu: {
-        label: 'Policies',
-        icon: 'share'
+      data: {
+        menu: {
+          label: 'Policies',
+          icon: 'share'
+        }
       }
     })
     .state('apis.admin.documentation', {
@@ -207,9 +227,11 @@ function routerConfig($stateProvider, $urlRouterProvider) {
       templateUrl: 'app/api/admin/documentation/apiDocumentation.html',
       controller: 'DocumentationController',
       controllerAs: 'documentationCtrl',
-      menu: {
-        label: 'Documentation',
-        icon: 'insert_drive_file'
+      data: {
+        menu: {
+          label: 'Documentation',
+          icon: 'insert_drive_file'
+        }
       }
     })
     .state('apis.admin.members', {
@@ -222,9 +244,11 @@ function routerConfig($stateProvider, $urlRouterProvider) {
           return ApiService.getMembers($stateParams.apiId);
         }
       },
-      menu: {
-        label: 'Members',
-        icon: 'group'
+      data: {
+        menu: {
+          label: 'Members',
+          icon: 'group'
+        }
       }
     })
     .state('apis.admin.properties', {
@@ -232,9 +256,11 @@ function routerConfig($stateProvider, $urlRouterProvider) {
       templateUrl: 'app/api/admin/properties/properties.html',
       controller: 'ApiPropertiesController',
       controllerAs: 'apiPropertiesCtrl',
-      menu: {
-        label: 'Properties',
-        icon: 'assignment'
+      data: {
+        menu: {
+          label: 'Properties',
+          icon: 'assignment'
+        }
       }
     })
     .state('apis.admin.analytics', {
@@ -242,9 +268,11 @@ function routerConfig($stateProvider, $urlRouterProvider) {
       templateUrl: 'app/api/admin/analytics/analytics.html',
       controller: 'ApiAnalyticsController',
       controllerAs: 'analyticsCtrl',
-      menu: {
-        label: 'Analytics',
-        icon: 'insert_chart'
+      data: {
+        menu: {
+          label: 'Analytics',
+          icon: 'insert_chart'
+        }
       }
     })
     .state('apis.admin.documentation.new', {
@@ -264,9 +292,11 @@ function routerConfig($stateProvider, $urlRouterProvider) {
       templateUrl: 'app/api/admin/healthcheck/healthcheck.html',
       controller: 'ApiHealthCheckController',
       controllerAs: 'healthCheckCtrl',
-      menu: {
-        label: 'Health-check',
-        icon: 'favorite'
+      data: {
+        menu: {
+          label: 'Health-check',
+          icon: 'favorite'
+        }
       }
     })
     .state('apis.admin.history', {
@@ -280,9 +310,11 @@ function routerConfig($stateProvider, $urlRouterProvider) {
           return ApiService.getApiEvents($stateParams.apiId, eventTypes);
         }
       },
-      menu: {
-        label: 'History',
-        icon: 'history'
+      data: {
+        menu: {
+          label: 'History',
+          icon: 'history'
+        }
       }
     })
     .state('apis.admin.events', {
@@ -296,9 +328,11 @@ function routerConfig($stateProvider, $urlRouterProvider) {
           return ApiService.getApiEvents($stateParams.apiId, eventTypes);
         }
       },
-      menu: {
-        label: 'Events',
-        icon: 'event_note'
+      data: {
+        menu: {
+          label: 'Events',
+          icon: 'event_note'
+        }
       }
     })
     .state('applications', {
@@ -315,12 +349,14 @@ function routerConfig($stateProvider, $urlRouterProvider) {
           return ApplicationService.list();
         }
       },
-      menu: {
-        label: 'Applications',
-        icon: 'list',
-        firstLevel: true
-      },
-      devMode: true
+      data: {
+        menu: {
+          label: 'Applications',
+          icon: 'list',
+          firstLevel: true
+        },
+        devMode: true
+      }
     })
     .state('applications.portal', {
       abstract: true,
@@ -339,11 +375,13 @@ function routerConfig($stateProvider, $urlRouterProvider) {
       templateUrl: 'app/application/details/general/applicationGeneral.html',
       controller: 'ApplicationGeneralController',
       controllerAs: 'applicationGeneralCtrl',
-      menu: {
-        label: 'Global settings',
-        icon: 'blur_on'
-      },
-      devMode: true
+      data: {
+        menu: {
+          label: 'Global settings',
+          icon: 'blur_on'
+        },
+        devMode: true
+      }
     })
     .state('applications.portal.subscriptions', {
       url: '/subscriptions',
@@ -355,11 +393,13 @@ function routerConfig($stateProvider, $urlRouterProvider) {
           return ApplicationService.listSubscriptions($stateParams.applicationId);
         }
       },
-      menu: {
-        label: 'Subscriptions',
-        icon: 'vpn_key'
-      },
-      devMode: true
+      data: {
+        menu: {
+          label: 'Subscriptions',
+          icon: 'vpn_key'
+        },
+        devMode: true
+      }
     })
     .state('applications.portal.members', {
       url: '/members',
@@ -371,22 +411,26 @@ function routerConfig($stateProvider, $urlRouterProvider) {
           return ApplicationService.getMembers($stateParams.applicationId);
         }
       },
-      menu: {
-        label: 'Members',
-        icon: 'group'
-      },
-      devMode: true
+      data: {
+        menu: {
+          label: 'Members',
+          icon: 'group'
+        },
+        devMode: true
+      }
     })
     .state('applications.portal.analytics', {
       url: '/analytics?timeframe&timestamp',
       templateUrl: 'app/application/details/analytics/analytics.html',
       controller: 'ApplicationAnalyticsController',
       controllerAs: 'analyticsCtrl',
-      menu: {
-        label: 'Analytics',
-        icon: 'insert_chart'
-      },
-      devMode: true
+      data: {
+        menu: {
+          label: 'Analytics',
+          icon: 'insert_chart'
+        },
+        devMode: true
+      }
     })
     .state('instances', {
       abstract: true,
@@ -403,12 +447,14 @@ function routerConfig($stateProvider, $urlRouterProvider) {
           return InstancesService.list();
         }
       },
-      menu: {
-        label: 'Instances',
-        icon: 'developer_dashboard',
-        firstLevel: true
-      },
-      roles: ['ADMIN']
+      data: {
+        menu: {
+          label: 'Instances',
+          icon: 'developer_dashboard',
+          firstLevel: true
+        },
+        roles: ['ADMIN']
+      }
     })
     .state('instances.detail', {
       abstract: true,
@@ -427,9 +473,11 @@ function routerConfig($stateProvider, $urlRouterProvider) {
       templateUrl: 'app/instances/details/environment/instanceEnvironment.html',
       controller: 'InstanceEnvironmentController',
       controllerAs: 'instanceEnvironmentCtrl',
-      menu: {
-        label: 'Environment',
-        icon: 'computer'
+      data: {
+        menu: {
+          label: 'Environment',
+          icon: 'computer'
+        }
       }
     })
     .state('instances.detail.monitoring', {
@@ -437,10 +485,12 @@ function routerConfig($stateProvider, $urlRouterProvider) {
       templateUrl: 'app/instances/details/monitoring/instanceMonitoring.html',
       controller: 'InstanceMonitoringController',
       controllerAs: 'instanceMonitoringCtrl',
-      menu: {
-        label: 'Monitoring',
-        icon: 'graphic_eq'
-      },
+      data: {
+        menu: {
+          label: 'Monitoring',
+          icon: 'graphic_eq'
+        },
+      }
       resolve: {
         resolvedMonitoringData: function ($stateParams, InstancesService, resolvedInstance) {
           return InstancesService.getMonitoringData($stateParams.id, resolvedInstance.data.id);
@@ -452,12 +502,14 @@ function routerConfig($stateProvider, $urlRouterProvider) {
       templateUrl: 'app/platform/dashboard/dashboard.html',
       controller: 'DashboardController',
       controllerAs: 'dashboardCtrl',
-      menu: {
-        label: 'Dashboard',
-        icon: 'show_chart',
-        firstLevel: true
-      },
-      roles: ['ADMIN']
+      data: {
+        menu: {
+          label: 'Dashboard',
+          icon: 'show_chart',
+          firstLevel: true
+        },
+        roles: ['ADMIN']
+      }
     })
     .state('configuration', {
       abstract: true,
@@ -473,45 +525,53 @@ function routerConfig($stateProvider, $urlRouterProvider) {
         }
       },
       template: '<div ui-view></div>',
-      menu: {
-        label: 'Configuration',
-        icon: 'settings',
-        firstLevel: true
-      },
-      roles: ['ADMIN']
+      data: {
+        menu: {
+          label: 'Configuration',
+          icon: 'settings',
+          firstLevel: true
+        },
+        roles: ['ADMIN']
+      }
     })
     .state('configuration.admin.views', {
       url: '/views',
       templateUrl: 'app/configuration/admin/views/views.html',
       controller: 'ViewsController',
       controllerAs: 'viewsCtrl',
-      menu: {
-        label: 'Views',
-        icon: 'view_module'
-      },
-      roles: ['ADMIN']
+      data: {
+        menu: {
+          label: 'Views',
+          icon: 'view_module'
+        },
+        roles: ['ADMIN']
+      }
     })
     .state('configuration.admin.tags', {
       url: '/tags',
       templateUrl: 'app/configuration/admin/tags/tags.html',
       controller: 'TagsController',
       controllerAs: 'tagsCtrl',
-      menu: {
-        label: 'Sharding tags',
-        icon: 'label'
-      },
-      roles: ['ADMIN']
+      data: {
+        menu: {
+          label: 'Sharding tags',
+          icon: 'label'
+        },
+        roles: ['ADMIN']
+      }
     })
     .state('configuration.admin.groups', {
       url: '/groups',
       templateUrl: 'app/configuration/admin/groups/groups.html',
       controller: 'GroupsController',
       controllerAs: 'groupsCtrl',
-      menu: {
-        label: 'Groups',
-        icon: 'group_work'
-      },
-      roles: ['ADMIN']
+      data: {
+        menu: {
+          label: 'Groups',
+          icon: 'group_work'
+        },
+        roles: ['ADMIN']
+      }
     })
     .state('user', {
       url: '/user',
@@ -524,21 +584,27 @@ function routerConfig($stateProvider, $urlRouterProvider) {
       templateUrl: 'app/login/login.html',
       controller: 'LoginController',
       controllerAs: 'loginCtrl',
-      devMode: true
+      data: {
+        devMode: true
+      }
     })
     .state('registration', {
       url: '/registration',
       templateUrl: 'app/registration/registration.html',
       controller: 'RegistrationController',
       controllerAs: 'registrationCtrl',
-      devMode: true
+      data: {
+        devMode: true
+      }
     })
     .state('confirm', {
       url: '/registration/confirm/:token',
       templateUrl: 'app/registration/confirm/confirm.html',
       controller: 'ConfirmController',
       controllerAs: 'confirmCtrl',
-      devMode: true
+      data: {
+        devMode: true
+      }
     });
 
   $urlRouterProvider.otherwise('/');
