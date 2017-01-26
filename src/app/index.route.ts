@@ -490,7 +490,7 @@ function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: 
           label: 'Monitoring',
           icon: 'graphic_eq'
         },
-      }
+      },
       resolve: {
         resolvedMonitoringData: function ($stateParams, InstancesService, resolvedInstance) {
           return InstancesService.getMonitoringData($stateParams.id, resolvedInstance.data.id);
