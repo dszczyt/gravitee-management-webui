@@ -13,16 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import moment = require('moment');
+import _ = require('lodash');
+import angular = require('angular');
+
 class ApiHealthCheckController {
-  constructor (ApiService, resolvedApi, $state, $mdSidenav, $mdDialog, NotificationService, $scope, $rootScope) {
+  private api: any;
+  private healthcheck: any;
+  private timeUnits: string[];
+  private httpMethods: string[];
+  private hasData: boolean;
+  private analytics: any;
+
+  constructor (
+    private ApiService,
+    private resolvedApi,
+    private $state,
+    private $mdSidenav,
+    private $mdDialog,
+    private NotificationService,
+    private $scope,
+    private $rootScope
+  ) {
     'ngInject';
-    this.ApiService = ApiService;
-    this.$mdDialog = $mdDialog;
-    this.$mdSidenav = $mdSidenav;
-    this.NotificationService = NotificationService;
-    this.$scope = $scope;
-    this.$state = $state;
-    this.$rootScope = $rootScope;
     this.api = resolvedApi.data;
 
     this.healthcheck = this.api.services && this.api.services['health-check'];
@@ -32,7 +45,7 @@ class ApiHealthCheckController {
 
     this.hasData = false;
 
-    this.analytics = this.analytics();
+    this.analytics = this._analytics();
 
     this.setTimeframe('1h');
 
@@ -217,10 +230,10 @@ class ApiHealthCheckController {
   }
 
   setTimeframe(timeframeId) {
-    var timeframe = _.find(this.analytics.timeframes, function(timeframe) {
+    var timeframe = _.find(this.analytics.timeframes, function(timeframe: any) {
       return timeframe.id === timeframeId;
     });
-    var now = moment();
+    var now:any = moment();
 
     this.$scope.analytics = {
       timeframe: timeframe,
@@ -305,7 +318,7 @@ class ApiHealthCheckController {
       });
   }
 
-  analytics() {
+  _analytics() {
     return {
       timeframes: [
         {
