@@ -13,18 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import _ = require('lodash');
+
 class ApiEventsController {
+  private events: any;
+  private eventsTimeline: any;
+
   constructor (resolvedEvents) {
     'ngInject';
     this.events = resolvedEvents.data;
     this.eventsTimeline = [];
     this.initTimeline(this.events);
   }
-  
+
   initTimeline(events) {
-    var self = this;
-    _.forEach(events, function(event) {
-      var eventTimelineType = self.getEventTypeTimeline(event.type);
+    _.forEach(events, event =>{
+      var eventTimelineType = this.getEventTypeTimeline(event.type);
       var eventTimeline = {
         event: event,
         badgeClass: eventTimelineType.badgeClass,
@@ -33,17 +37,17 @@ class ApiEventsController {
         when: event.created_at,
         username: event.properties.username
       };
-      self.eventsTimeline.push(eventTimeline);
+      this.eventsTimeline.push(eventTimeline);
     });
   }
-  
+
   reloadEventsTimeline(events) {
     this.eventsTimeline = [];
     this.initTimeline(events);
   }
-  
-  getEventTypeTimeline(eventType) {
-    var eventTypeTimeline = {};
+
+  getEventTypeTimeline(eventType): any {
+    var eventTypeTimeline: any = {};
     switch(eventType) {
       case 'start_api':
         eventTypeTimeline.icon = "glyphicon-play";

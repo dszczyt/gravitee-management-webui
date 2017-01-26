@@ -13,26 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import _ = require('lodash');
+
 class PageController {
+  private page: any;
+  private emptyFetcher: {
+    type: string;
+    id: string;
+    properties: any;
+  };
+  private useFetcher: boolean;
+  private fetchers: any;
+  private createMode: boolean;
+  private initialPage: any;
+  private editMode: boolean;
 
-	constructor(DocumentationService, $state, $mdDialog, $rootScope, $scope, NotificationService, FetcherService, $mdSidenav) {
+	constructor(private DocumentationService, private $state, private $mdDialog, private $rootScope, private $scope, private NotificationService, private FetcherService, private $mdSidenav) {
     'ngInject';
-    this.DocumentationService = DocumentationService;
-    this.$state = $state;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.$mdDialog = $mdDialog;
-    this.$mdSidenav = $mdSidenav;
-    this.NotificationService = NotificationService;
-    this.FetcherService = FetcherService;
-    var that = this;
-
     this.useFetcher = false;
 
 
-    this.$scope.$watch('pageContentFile.content', function (data) {
+    this.$scope.$watch('pageContentFile.content', (data) => {
       if (data) {
-        that.page.content = data;
+        this.page.content = data;
       }
     });
 
@@ -45,25 +49,25 @@ class PageController {
     this.$scope.fetcherJsonSchema = this.emptyFetcher;
     this.$scope.fetcherJsonSchemaForm = ["*"];
     FetcherService.list().then(response => {
-      that.fetchers = response.data;
+      this.fetchers = response.data;
       if ( $state.current.name === 'apis.admin.documentation.new' ) {
         if (['SWAGGER', 'RAML', 'MARKDOWN'].indexOf($state.params.type) === -1) {
           $state.go('apis.admin.documentation');
         }
         this.createMode = true;
         this.page = { type: this.$state.params.type };
-        that.initialPage = _.clone(this.page);
+        this.initialPage = _.clone(this.page);
         this.edit();
       } else {
         this.preview();
         DocumentationService.get($state.params.apiId, $state.params.pageId).then( response => {
-          that.page = response.data;
-          DocumentationService.cachePageConfiguration($state.params.apiId, that.page);
-          that.initialPage = _.clone(response.data);
-          if(!(_.isNil(that.page.source) || _.isNil(that.page.source.type))) {
-            that.useFetcher = true;
+          this.page = response.data;
+          DocumentationService.cachePageConfiguration($state.params.apiId, this.page);
+          this.initialPage = _.clone(response.data);
+          if(!(_.isNil(this.page.source) || _.isNil(this.page.source.type))) {
+            this.useFetcher = true;
             _.forEach(this.fetchers, fetcher => {
-              if (fetcher.id === that.page.source.type) {
+              if (fetcher.id === this.page.source.type) {
                 this.$scope.fetcherJsonSchema = JSON.parse(fetcher.schema);
               }
             });
@@ -91,27 +95,26 @@ class PageController {
   }
 
   upsert() {
-    var that = this;
     if ( !this.useFetcher && this.page.source ) {
       delete this.page.source;
     }
     if(this.createMode) {
       this.DocumentationService.createPage(this.$state.params.apiId, this.page)
-        .then(function (page) {
-          that.onPageUpdate();
-          that.$state.go('apis.admin.documentation.page', {apiId: that.$state.params.apiId,pageId: page.data.id}, {reload: true});
+        .then((page) => {
+          this.onPageUpdate();
+          this.$state.go('apis.admin.documentation.page', {apiId: this.$state.params.apiId,pageId: page.data.id}, {reload: true});
         })
-        .catch(function (error) {
-          that.$scope.error = error;
+        .catch((error) => {
+          this.$scope.error = error;
       });
     } else {
       this.DocumentationService.editPage(this.$state.params.apiId, this.page.id, this.page)
-        .then(function () {
-          that.onPageUpdate();
-          that.$state.go(that.$state.current, that.$state.params, {reload: true});
+        .then(() =>{
+          this.onPageUpdate();
+          this.$state.go(this.$state.current, this.$state.params, {reload: true});
         })
-        .catch(function (error) {
-          that.$scope.error = error;
+        .catch(error =>{
+          this.$scope.error = error;
         });
     }
   }

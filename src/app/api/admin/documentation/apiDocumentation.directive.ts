@@ -26,7 +26,7 @@ class DocumentationDirective {
         element.bind('change', function (changeEvent) {
           let reader = new FileReader();
           var file = changeEvent.target.files[0];
-          reader.onload = function (loadEvent) {
+          reader.onload = function (loadEvent: any) {
             scope.$apply(function () {
               scope.filecontent = loadEvent.target.result;
               scope.filename = file.name;

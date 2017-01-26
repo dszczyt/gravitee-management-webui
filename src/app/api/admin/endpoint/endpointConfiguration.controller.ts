@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class ApiEndpointController {
-  constructor(ApiService, NotificationService, $scope, $rootScope, $state, $stateParams, resolvedApi) {
-    'ngInject';
-    this.ApiService = ApiService;
-    this.NotificationService = NotificationService;
-    this.$scope = $scope;
-    this.$rootScope = $rootScope;
-    this.$state = $state;
-    this.$stateParams = $stateParams;
 
-    this.resolvedApi = resolvedApi;
+import _ = require('lodash');
+
+class ApiEndpointController {
+  private api: any;
+  private endpoint: any;
+  private initialEndpoints: any;
+  private initialEndpoint: any;
+
+  constructor(private ApiService, private NotificationService, private $scope, private $rootScope, private $state, private $stateParams, private resolvedApi) {
+    'ngInject';
+
     this.api = resolvedApi.data;
 
     this.endpoint = _.find(this.api.proxy.endpoints, { 'name': $stateParams.endpointName});

@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class DocumentationController {
 
-	constructor(DocumentationService, $scope, $state, dragularService) {
+import _ = require('lodash');
+
+class DocumentationController {
+  private editMode: boolean;
+  private pages: any;
+
+	constructor(private DocumentationService, private $scope, private $state, private dragularService) {
     'ngInject';
     this.DocumentationService = DocumentationService;
 		this.editMode = false;
 
-    this.$state = $state;
-    this.$scope = $scope;
-    this.DragularService = dragularService;
-
     $scope.listPagesDisplayed = true;
 
-    var that = this;
-    $scope.$on('onGraviteePageDeleted', function () {
-      that.$state.go('apis.admin.documentation');
-      that.list();
+    $scope.$on('onGraviteePageDeleted', () => {
+      this.$state.go('apis.admin.documentation');
+      this.list();
     });
   }
 
@@ -37,7 +37,7 @@ class DocumentationController {
     let that = this;
     this.list().then( () => {
       let d = document.querySelector('.pages');
-      that.DragularService([d], {
+      that.dragularService([d], {
         scope: this.$scope,
         containersModel: _.cloneDeep(this.pages),
         nameSpace: 'documentation'

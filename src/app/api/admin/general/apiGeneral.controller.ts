@@ -13,28 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import _ = require('lodash');
+
 class ApiAdminController {
-  constructor(ApiService, NotificationService, UserService, $scope, $mdDialog, $mdEditDialog, $rootScope, resolvedApi,
-              base64, $state, ViewService, GroupService, TagService) {
+  private initialApi: any;
+  private api: any;
+  private groups: any;
+  private views: any;
+  private tags: any;
+  private failoverEnabled: boolean;
+  private contextPathEditable: boolean;
+
+  constructor(
+    private ApiService,
+    private NotificationService,
+    private UserService,
+    private $scope,
+    private $mdDialog,
+    private $mdEditDialog,
+    private $rootScope,
+    private resolvedApi,
+    private base64,
+    private $state,
+    private ViewService,
+    private GroupService,
+    private TagService
+  ) {
     'ngInject';
 
     if ('apis.admin.general' === $state.current.name) {
       $state.go('apis.admin.general.main');
     }
-    
-    this.ApiService = ApiService;
-    this.NotificationService = NotificationService;
-    this.UserService = UserService;
-    this.GroupService = GroupService;
-    this.$scope = $scope;
-    this.$rootScope = $rootScope;
-    this.$mdEditDialog = $mdEditDialog;
-    this.$mdDialog = $mdDialog;
     this.initialApi = _.cloneDeep(resolvedApi.data);
     this.api = resolvedApi.data;
     this.$scope.selected = [];
-    this.base64 = base64;
-    this.$state = $state;
     if (!this.api.group) {
       this.api.group = GroupService.getEmptyGroup();
     }
@@ -57,12 +69,11 @@ class ApiAdminController {
 
     this.initState();
 
-    var that = this;
-    ViewService.list().then(function(response) {
-      that.views = response.data;
+    ViewService.list().then(response => {
+      this.views = response.data;
     });
-    TagService.list().then(function(response) {
-      that.tags = response.data;
+    TagService.list().then(response => {
+      this.tags = response.data;
     });
   }
 
