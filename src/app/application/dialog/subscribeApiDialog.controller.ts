@@ -68,12 +68,11 @@ function DialogSubscribeApiController($scope, $mdDialog, application, subscripti
 	};
 
 	$scope.subscribe = function(application) {
-		for (var i = 0; i < $scope.apisSelected.length; i++) {
-				var apiId = $scope.apisSelected[i];
-				ApplicationService.subscribe(application, apiId).then(function() {
-					NotificationService.show('Application has subscribed to api ' + apiId);
+		$scope.apisSelected.forEach((apiId: any) => {
+				ApplicationService.subscribe(application, apiId).then(() => {
+					NotificationService.show(`Application has subscribed to api ${apiId}`);
 				});
-		}
+		});
 		$mdDialog.hide(application);
 	};
 }

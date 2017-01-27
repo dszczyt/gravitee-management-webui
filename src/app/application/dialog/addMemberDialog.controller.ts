@@ -13,7 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-function DialogAddMemberController($scope, $mdDialog, application, applicationMembers, ApplicationService, UserService, NotificationService) {
+import * as _ from 'lodash';
+
+function DialogAddMemberController(
+  $scope,
+  $mdDialog,
+  application,
+  applicationMembers,
+  ApplicationService,
+  UserService,
+  NotificationService
+) {
   'ngInject';
 
 	$scope.application = application;
@@ -31,10 +41,8 @@ function DialogAddMemberController($scope, $mdDialog, application, applicationMe
 		if (query) {
 			return UserService.search(query).then(function(response) {
         var membersFound = response.data;
-        var filterMembers = _.filter(membersFound, function(member) {
-          return _.findIndex($scope.applicationMembers,
-                              function(applicationMember) { return applicationMember.username === member.id;}) === -1;
-        });
+        var filterMembers = _.filter(membersFound, (member: any) => _.findIndex($scope.applicationMembers,
+          (applicationMember: any) => applicationMember.username === member.id) === -1);
         return filterMembers;
 			});
 		}
@@ -61,8 +69,7 @@ function DialogAddMemberController($scope, $mdDialog, application, applicationMe
 	};
 
 	$scope.isUserSelected = function(user) {
-		var idx = $scope.usersSelected.indexOf(user.id);
-    return idx > -1;
+		return $scope.usersSelected.indexOf(user.id) > -1;
 	};
 
   $scope.addMembers = function () {

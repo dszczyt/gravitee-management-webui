@@ -13,15 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as angular from 'angular';
+
 class ApplicationsController {
-  constructor($window, $mdDialog, $state, $rootScope, ApplicationService, NotificationService, resolvedApplications) {
+  private applications: any;
+
+  constructor(
+    private $window,
+    private $mdDialog,
+    private $state,
+    private $rootScope,
+    private ApplicationService,
+    private NotificationService,
+    private resolvedApplications
+  ) {
 		'ngInject';
-    this.$window = $window;
-		this.$mdDialog = $mdDialog;
-		this.$state = $state;
-		this.$rootScope = $rootScope;
-		this.ApplicationService = ApplicationService;
-		this.NotificationService = NotificationService;
 		this.applications = resolvedApplications.data;
 	}
 
@@ -29,20 +35,19 @@ class ApplicationsController {
 		if (!this.$rootScope.graviteeUser) {
 			this.$rootScope.$broadcast("authenticationRequired");
 		} else {
-			this.showAddApplicationModal();
+			this.showAddApplicationModal(null);
 		}
 	}
 
 	showAddApplicationModal(ev) {
-    var _that = this;
     this.$mdDialog.show({
       controller: 'DialogApplicationController',
       templateUrl: 'app/application/dialog/application.dialog.html',
       parent: angular.element(document.body),
 			targetEvent: ev
-    }).then(function (application) {
+    }).then((application: any) => {
       if (application) {
-        _that.$window.location.href = '#/applications/' + application.data.id + '/general';
+        this.$window.location.href = `#/applications/${application.data.id}/general`;
       }
     }, function() {
        // You cancelled the dialog
