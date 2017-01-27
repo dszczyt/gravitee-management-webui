@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 class ApiResourcesController {
-  constructor (ApiService, resolvedApi, $state, $mdSidenav, $mdDialog, ResourceService, NotificationService, $scope, $rootScope) {
+  private api: any;
+  private creation: boolean;
+  private resourceJsonSchemaForm: string[];
+  private types: any[];
+  private resource: any;
+  private resourceJsonSchema: any;
+
+  constructor (
+    private ApiService,
+    private resolvedApi,
+    private $mdSidenav,
+    private $mdDialog,
+    private ResourceService,
+    private NotificationService,
+    private $scope,
+    private $rootScope
+  ) {
     'ngInject';
-    this.ApiService = ApiService;
-    this.$mdSidenav = $mdSidenav;
-    this.$mdDialog = $mdDialog;
-    this.NotificationService = NotificationService;
-    this.ResourceService = ResourceService;
-    this.$scope = $scope;
-    this.$state = $state;
-    this.$rootScope = $rootScope;
     this.api = resolvedApi.data;
     this.creation = true;
     this.resourceJsonSchemaForm = ["*"];
