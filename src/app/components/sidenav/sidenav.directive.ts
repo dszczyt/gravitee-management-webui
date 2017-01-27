@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as _ from 'lodash';
+
 class SideNavDirective {
   constructor() {
     let directive = {
@@ -28,30 +30,22 @@ class SideNavDirective {
 }
 
 class SideNavController {
-  constructor($rootScope, $mdSidenav, $mdDialog, $scope, $state, UserService, Constants) {
+  private routeMenuItems: any;
+  constructor(private $rootScope, private $mdSidenav, private $mdDialog, private $scope, private $state, private UserService, private Constants) {
     'ngInject';
-    this.$rootScope = $rootScope;
-    this.$mdSidenav = $mdSidenav;
-    this.$mdDialog = $mdDialog;
-    this.UserService = UserService;
-    this.$state = $state;
-    this.$scope = $scope;
-
     $rootScope.devMode = Constants.devMode;
     $rootScope.portalTitle = Constants.portalTitle;
 
     $scope.userCreationEnabled = Constants.userCreationEnabled;
 
-    var _that = this;
-
-    this.routeMenuItems = _.filter($state.get(), function (state) {
+    this.routeMenuItems = _.filter($state.get(), function (state: any) {
       return !state.abstract && state.menu;
     });
 
-    _that.loadMenuItems();
+    this.loadMenuItems();
 
-    $rootScope.$on('userLoginSuccessful', function () {
-      _that.loadMenuItems();
+    $rootScope.$on('userLoginSuccessful', () =>{
+      this.loadMenuItems();
     });
 
     $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState) {
@@ -64,9 +58,9 @@ class SideNavController {
       }
     });
 
-    $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState) {
-      _that.checkRedirectIfNotAllowed(toState, fromState, event);
-      $scope.subMenuItems = _.filter(_that.routeMenuItems, function (routeMenuItem) {
+    $scope.$on('$stateChangeSuccess', (event, toState, toParams, fromState) =>{
+      this.checkRedirectIfNotAllowed(toState, fromState, event);
+      $scope.subMenuItems = _.filter(this.routeMenuItems, function (routeMenuItem: any) {
         var routeMenuItemSplitted = routeMenuItem.name.split('.'), toStateSplitted = toState.name.split('.');
         return !routeMenuItem.menu.firstLevel &&
           routeMenuItemSplitted[0] === toStateSplitted[0] && routeMenuItemSplitted[1] === toStateSplitted[1];
@@ -74,7 +68,7 @@ class SideNavController {
     });
 
     $scope.$on('authenticationRequired', function () {
-      _that.$state.go('login');
+      $state.go('login');
     });
   }
 
@@ -92,7 +86,7 @@ class SideNavController {
 
   loadMenuItems() {
     var that = this;
-    that.$scope.menuItems = _.filter(this.routeMenuItems, function (routeMenuItem) {
+    that.$scope.menuItems = _.filter(this.routeMenuItems, function (routeMenuItem: any) {
       var isMenuItem = routeMenuItem.menu.firstLevel && (!routeMenuItem.roles || that.UserService.isUserInRoles(routeMenuItem.roles));
       if (that.$rootScope.devMode) {
         return isMenuItem && routeMenuItem.devMode;

@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 class RoleDirective {
+  private restrict: string;
+  private controller;
+
   constructor () {
     this.restrict = 'AE';
     this.controller = RoleController;
   }
-    
+
   link(scope, elem, attr, ctr) {
     let roles = attr.graviteeRolesAllowed.replace(/ /g,'').split(',');
 
@@ -29,9 +32,8 @@ class RoleDirective {
 }
 
 class RoleController {
-  constructor (UserService) {
+  constructor (private UserService) {
     'ngInject';
-    this.UserService = UserService;
   }
 }
 

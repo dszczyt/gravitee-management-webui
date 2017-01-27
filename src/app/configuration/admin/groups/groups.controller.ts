@@ -13,17 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as _ from 'lodash';
+import * as angular from 'angular';
+
 class GroupsController {
-  constructor($scope, GroupService, ApplicationService, ApiService, NotificationService, $q, $mdDialog, $mdSidenav) {
+  private groupType: string;
+  private applicationGroups: any[];
+  private apiGroups: any[];
+  private selectedGroup: any;
+
+  constructor(
+    private $scope,
+    private GroupService,
+    private ApplicationService,
+    private ApiService,
+    private NotificationService,
+    private $q,
+    private $mdDialog,
+    private $mdSidenav
+  ) {
     'ngInject';
-    this.$scope = $scope;
-    this.$q = $q;
-    this.$mdSidenav = $mdSidenav;
-    this.GroupService = GroupService;
-    this.ApplicationService = ApplicationService;
-    this.NotificationService = NotificationService;
-    this.ApiService = ApiService;
-    this.$mdDialog = $mdDialog;
     this.groupType = "APPLICATION";
     this.applicationGroups = [];
     this.apiGroups = [];
@@ -32,7 +41,7 @@ class GroupsController {
 
   listGroups() {
     this.GroupService.list().then( listResponse => {
-      const promises = _.map(listResponse.data, group => {
+      const promises = _.map(listResponse.data, (group: any) => {
         return this.GroupService.getMembers(group.id).then( getMembersResponse  => {
           return {
             group,
@@ -60,7 +69,7 @@ class GroupsController {
       });
 
       this.$q.all(promises).then(responses => {
-        var partition = _.partition(responses, item => {
+        var partition = _.partition(responses, (item: any) => {
           return item.group.type === "application";
         });
         this.applicationGroups = partition[0];
@@ -174,7 +183,7 @@ class GroupsController {
     this.$mdDialog.show(confirm).then( () => {
       _this.GroupService.deleteMember(_this.selectedGroup.group.id, username).then( () => {
         _this.NotificationService.show('Member ' + username + ' has been removed from the group');
-        _.remove(_this.selectedGroup.members, (m) => {
+        _.remove(_this.selectedGroup.members, (m: any) => {
           return m.username === username;
         });
 

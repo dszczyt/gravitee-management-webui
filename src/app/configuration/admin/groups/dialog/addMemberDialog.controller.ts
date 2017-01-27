@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as _ from 'lodash';
+
 function DialogAddGroupMemberController($scope, $mdDialog, group, GroupService, UserService, NotificationService) {
   'ngInject';
 
@@ -30,8 +32,8 @@ function DialogAddGroupMemberController($scope, $mdDialog, group, GroupService, 
     if (query) {
       return UserService.search(query).then((response) => {
         var membersFound = response.data;
-        return _.filter(membersFound, (member) => {
-          return _.findIndex($scope.groupItem.members, (m) => {
+        return _.filter(membersFound, (member: any) => {
+          return _.findIndex($scope.groupItem.members, (m: any) => {
               return m.username === member.id;
             }) === -1;
         });
@@ -73,10 +75,10 @@ function DialogAddGroupMemberController($scope, $mdDialog, group, GroupService, 
         "type" : "user"
       };
       GroupService.addOrUpdateMember($scope.groupItem.group.id, member).then(() => {
-        NotificationService.show('Member ' + username + ' has been added to the group');
+        NotificationService.show(`Member ${username} has been added to the group`);
         members.push(member);
       }).catch(function (error) {
-        NotificationService.show('Error while adding member ' + username);
+        NotificationService.show(`Error while adding member ${username}`);
         $scope.error = error;
       });
     }

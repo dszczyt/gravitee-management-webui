@@ -13,16 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class ViewsController {
-  constructor($scope, ViewService, NotificationService, $q, $mdEditDialog, $mdDialog) {
-    'ngInject';
+import * as _ from 'lodash';
 
-    this.$scope = $scope;
-    this.ViewService = ViewService;
-    this.NotificationService = NotificationService;
-    this.$q = $q;
-    this.$mdEditDialog = $mdEditDialog;
-    this.$mdDialog = $mdDialog;
+class ViewsController {
+  private viewsToCreate: any[];
+  private viewsToUpdate: any[];
+  private views: any;
+  private initialViews: any;
+
+  constructor(
+    private $scope,
+    private ViewService,
+    private NotificationService,
+    private $q,
+    private $mdEditDialog,
+    private $mdDialog
+  ) {
+    'ngInject';
 
     this.loadViews();
     this.viewsToCreate = [];
@@ -30,13 +37,12 @@ class ViewsController {
   }
 
   loadViews() {
-    var that = this;
-    this.ViewService.list().then(function (response) {
-      that.views = response.data;
-      _.each(that.views, function(view) {
+    this.ViewService.list().then(response =>{
+      this.views = response.data;
+      _.each(this.views, function(view) {
         delete view.totalApis;
       });
-      that.initialViews = _.cloneDeep(that.views);
+      this.initialViews = _.cloneDeep(this.views);
     });
   }
 

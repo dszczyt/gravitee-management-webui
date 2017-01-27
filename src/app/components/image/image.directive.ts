@@ -36,25 +36,21 @@ class ImageDirective {
 }
 
 class ImageController {
-  constructor($rootScope, $scope, Upload) {
+  constructor(private $rootScope, private $scope, private Upload) {
     'ngInject';
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.Upload = Upload;
   }
 
   selectImage(file) {
-    var that = this;
-    this.Upload.base64DataUrl(file).then(function (image) {
+    this.Upload.base64DataUrl(file).then((image: any) =>{
       if (image) {
-        if (!that.$scope.imageOriginal) {
-          that.$scope.imageOriginal = that.$scope.image;
+        if (!this.$scope.imageOriginal) {
+          this.$scope.imageOriginal = this.$scope.image;
         }
-        that.$scope.image = image;
-        if (that.$scope.imageForm) {
-          that.$scope.imageForm.$setDirty();
+        this.$scope.image = image;
+        if (this.$scope.imageForm) {
+          this.$scope.imageForm.$setDirty();
         }
-        that.$rootScope.$broadcast("apiPictureChangeSuccess", {image: image});
+        this.$rootScope.$broadcast("apiPictureChangeSuccess", {image: image});
       }
     });
   }

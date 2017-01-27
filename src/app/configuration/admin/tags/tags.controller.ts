@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class TagsController {
-  constructor($scope, TagService, NotificationService, $q, $mdEditDialog, $mdDialog) {
-    'ngInject';
+import * as _ from 'lodash';
 
-    this.$scope = $scope;
-    this.TagService = TagService;
-    this.NotificationService = NotificationService;
-    this.$q = $q;
-    this.$mdEditDialog = $mdEditDialog;
-    this.$mdDialog = $mdDialog;
+class TagsController {
+  private tagsToCreate: any[];
+  private tagsToUpdate: any[];
+  private initialTags: any;
+  private tags: any;
+
+  constructor(private $scope, private TagService, private NotificationService, private $q, private $mdEditDialog, private $mdDialog) {
+    'ngInject';
 
     this.loadTags();
     this.tagsToCreate = [];
@@ -30,13 +30,12 @@ class TagsController {
   }
 
   loadTags() {
-    var that = this;
-    this.TagService.list().then(function (response) {
-      that.tags = response.data;
-      _.each(that.tags, function(tag) {
+    this.TagService.list().then((response: any) =>{
+      this.tags = response.data;
+      _.each(this.tags, tag =>{
         delete tag.totalApis;
       });
-      that.initialTags = _.cloneDeep(that.tags);
+      this.initialTags = _.cloneDeep(this.tags);
     });
   }
 
