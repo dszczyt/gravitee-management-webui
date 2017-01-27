@@ -13,6 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as _ from 'lodash';
+import * as angular from 'angular';
+import * as Highcharts from 'highcharts';
+
 class ChartDirective {
   constructor() {
     return {
@@ -90,7 +94,7 @@ class ChartDirective {
               chart = Highcharts.charts[i];
               if (chart) {
                 event = chart.pointer.normalize(e.originalEvent);
-                points = _.map(chart.series, function (serie) {
+                points = _.map(chart.series, function (serie: any) {
                   return serie.searchPoint(event, true);
                 });
                 points = _.filter(points, function (point) {
@@ -103,7 +107,7 @@ class ChartDirective {
               }
             }
           });
-          Highcharts.Pointer.prototype.reset = function () {
+          (Highcharts as any).Pointer.prototype.reset = function () {
             let chart;
             for (let i = 0; i < Highcharts.charts.length; i++) {
               chart = Highcharts.charts[i];
@@ -113,7 +117,7 @@ class ChartDirective {
               }
             }
           };
-          Highcharts.Point.prototype.highlight = function (event) {
+          (Highcharts as any).Point.prototype.highlight = function (event) {
             if (points.length) {
               this.onMouseOver();
               this.series.chart.tooltip.refresh(points);
@@ -126,7 +130,7 @@ class ChartDirective {
           let thisChart = this.chart;
 
           if (e.trigger !== 'syncExtremes') {
-            Highcharts.each(Highcharts.charts, function (chart) {
+            (Highcharts as any).each(Highcharts.charts, function (chart) {
               if (chart && chart !== thisChart) {
                 if (chart.xAxis[0].setExtremes) {
                   chart.xAxis[0].setExtremes(e.min, e.max, undefined, false, {trigger: 'syncExtremes'});
@@ -166,10 +170,10 @@ class ChartDirective {
               newOptions.tooltip = {
                 formatter: function () {
                   let s = '<b>' + this.x + '</b>';
-                  if (_.filter(this.points, function (point) {
+                  if (_.filter(this.points, function (point: any) {
                       return point.y !== 0;
                     }).length) {
-                    _.forEach(this.points, function (point) {
+                    _.forEach(this.points, function (point: any) {
                       if (point.y) {
                         let name = ' ' + (point.series.options.labelPrefix ? point.series.options.labelPrefix + ' ' + point.series.name : point.series.name);
                         s += '<br /><span style="color:' + point.color + '">\u25CF</span>' + name + ': <b>' + point.y + '</b>';
@@ -233,7 +237,7 @@ class ChartDirective {
                   dataLabels: {
                     format: '<div style="text-align:center">' +
                     '<span style="font-size:25px;color:' +
-                    ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}%</span><br/>' +
+                    (((Highcharts as any).theme && (Highcharts as any).theme.contrastTextColor) || 'black') + '">{y}%</span><br/>' +
                     '<span style="font-size:12px;color:silver;">' + newOptions.series[0].name + '</span>' +
                     '</div>'
                   }

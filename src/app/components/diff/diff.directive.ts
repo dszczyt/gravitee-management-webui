@@ -13,7 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as JsDiff from 'jsdiff';
+
 class DiffDirective {
+  private restrict: string;
+  private scope: any;
+
   constructor() {
     this.restrict = 'AE';
     this.scope = {
