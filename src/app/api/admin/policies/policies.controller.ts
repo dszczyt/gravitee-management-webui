@@ -13,19 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import _ = require('lodash');
+import angular = require('angular');
+
 class ApiPoliciesController {
-  constructor (ApiService, resolvedApi, PolicyService, $state, $mdDialog, NotificationService, $scope, dragularService, $q, $rootScope) {
+  private apiPoliciesByPath: any;
+  private policiesToCopy: any[];
+  private policiesMap: any;
+  private selectedApiPolicy: any;
+  private httpMethods: string[];
+  private httpMethodsFilter: string[];
+  private pathsToCompare: any;
+
+  constructor (
+    private ApiService,
+    private resolvedApi,
+    private PolicyService,
+    private $mdDialog: angular.material.IDialogService,
+    private NotificationService,
+    private $scope,
+    private dragularService,
+    private $q,
+    private $rootScope
+  ) {
     'ngInject';
-    this.ApiService = ApiService;
-    this.PolicyService = PolicyService;
-    this.DragularService = dragularService;
-    this.$mdDialog = $mdDialog;
-    this.NotificationService = NotificationService;
-    this.$scope = $scope;
-    this.$state = $state;
-    this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.resolvedApi = resolvedApi;
     this.apiPoliciesByPath = {};
     this.policiesToCopy = [];
     this.policiesMap = {};
@@ -84,7 +95,7 @@ class ApiPoliciesController {
     if ( !policy.methods ) {
       policy.methods = _.clone(this.httpMethods);
     } else {
-      policy.methods = _.map(policy.methods, (method) => { return method.toUpperCase(); });
+      policy.methods = _.map(policy.methods, (method: string) => { return method.toUpperCase(); });
     }
   });
   });
@@ -93,7 +104,7 @@ class ApiPoliciesController {
   initDragular() {
     const dragularSrcOptions = document.querySelector('.gravitee-policy-draggable');
 
-    this.DragularService([dragularSrcOptions], {
+    this.dragularService([dragularSrcOptions], {
       copy: true,
       scope: this.$scope,
       containersModel: this.policiesToCopy,
@@ -108,7 +119,7 @@ class ApiPoliciesController {
   initDragularDropZone(path) {
     const dragularApiOptions = document.querySelector('.dropzone-' + _.kebabCase(path));
     if (dragularApiOptions) {
-      this.DragularService([dragularApiOptions], {
+      this.dragularService([dragularApiOptions], {
         copy: false,
         scope: this.$scope,
         containersModel: this.apiPoliciesByPath[path],
@@ -126,7 +137,7 @@ class ApiPoliciesController {
   listAllPoliciesWithSchema() {
     return this.PolicyService.list({expandSchema: true}).then( (policyServiceListResponse) => {
 
-        const promises = _.map(policyServiceListResponse.data, (originalPolicy) => {
+        const promises = _.map(policyServiceListResponse.data, (originalPolicy: {id: number}) => {
             return this.PolicyService.getSchema(originalPolicy.id).then( ({data}) => {
               return {
                 schema: data,
@@ -219,7 +230,7 @@ class ApiPoliciesController {
 
   filterByMethod(policy) {
     return _.reduce(
-      _.map(policy.methods, (method) => {
+      _.map(policy.methods, (method: string) => {
         return this.httpMethodsFilter.indexOf(method) < 0;
   }), (result, n) => { return result && n; });
   }
@@ -228,12 +239,11 @@ class ApiPoliciesController {
     ev.stopPropagation();
     this.selectedApiPolicy = null;
     const hashKey = this.apiPoliciesByPath[path][index].$$hashKey;
-    let alert = this.$mdDialog.confirm({
-      title: 'Warning',
-      content: 'Are you sure you want to remove this policy ?',
-      ok: 'OK',
-      cancel: 'Cancel'
-    });
+    let alert = this.$mdDialog.confirm()
+      .title('warning')
+      .textContent('Are you sure you want to remove this policy ?')
+      .ok('OK')
+      .cancel('Cancel');
 
     const that = this;
 
@@ -311,8 +321,9 @@ class ApiPoliciesController {
       parent: angular.element(document.body),
       targetEvent: event,
       clickOutsideToClose: true,
-      paths: this.apiPoliciesByPath,
-      rootCtrl: this
+      // TODO: paths & rootCtrl are not valid option keys
+      // paths: this.apiPoliciesByPath,
+      // rootCtrl: this
     }).then( (paths) => {
       this.apiPoliciesByPath = paths;
     this.savePaths();
@@ -321,12 +332,11 @@ class ApiPoliciesController {
 
   removePath(path) {
     this.selectedApiPolicy = {};
-    let alert = this.$mdDialog.confirm({
-      title: 'Warning',
-      content: 'Are you sure you want to remove this path ?',
-      ok: 'OK',
-      cancel: 'Cancel'
-    });
+    let alert = this.$mdDialog.confirm()
+      .title('Warning')
+      .textContent('Are you sure you want to remove this path ?')
+      .ok('OK')
+      .cancel('Cancel');
 
     const that = this;
 
@@ -392,7 +402,8 @@ class ApiPoliciesController {
   restoreOldPath(index, el) {
     el.$setViewValue(this.sortedPaths()[index]);
     el.$commitViewValue();
-    document.forms.editPathForm['path'+index].value = this.sortedPaths()[index];
+    // TODO: check editPathForm on form
+    (document.forms as any).editPathForm['path'+index].value = this.sortedPaths()[index];
   }
 }
 

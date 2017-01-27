@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import _ = require('lodash');
+
 class AddPoliciesPathController {
-  constructor($mdDialog, $scope, paths, rootCtrl) {
+  private newPath: {path: string; copyFromRootPath: boolean};
+  constructor(
+    private $mdDialog: ng.material.IDialogService,
+    private paths,
+  ) {
     'ngInject';
-    this.paths = paths;
-    this.scope = $scope;
-    this.mdDialog = $mdDialog;
-    this.rootCtrl = rootCtrl;
     this.newPath = {
       path: "",
       copyFromRootPath: true
@@ -27,7 +29,7 @@ class AddPoliciesPathController {
   }
 
   hide() {
-    this.mdDialog.cancel();
+    this.$mdDialog.cancel();
   }
 
   add() {
@@ -39,7 +41,7 @@ class AddPoliciesPathController {
     } else {
       this.paths[this.newPath.path] = [];
     }
-		this.mdDialog.hide(this.paths);
+		this.$mdDialog.hide(this.paths);
   }
 }
 
