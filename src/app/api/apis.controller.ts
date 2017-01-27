@@ -13,16 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import * as _ from 'lodash';
+
 class ApisController {
-  constructor($window, ApiService, $mdDialog, $scope, $state, $rootScope, Constants, resolvedApis, ViewService, $q) {
+  private graviteeUIVersion: string;
+  private apisScrollAreaHeight: number;
+  private isAPIsHome: boolean;
+  private createMode: boolean;
+  private views: any;
+  private selectedIndex: any;
+  private apis: any;
+  private devMode: boolean;
+  private syncStatus: any;
+  private NotificationService: any;
+
+  constructor(
+    private ApiService,
+    private $mdDialog,
+    private $scope,
+    private $state,
+    private $rootScope,
+    private Constants,
+    private resolvedApis,
+    private ViewService,
+    private $q: ng.IQService
+  ) {
     'ngInject';
-    this.$q = $q;
-    this.$window = $window;
-    this.ApiService = ApiService;
-    this.$mdDialog = $mdDialog;
-    this.$scope = $scope;
-    this.$state = $state;
-    this.$rootScope = $rootScope;
     this.graviteeUIVersion = Constants.version;
     this.resolvedApis = resolvedApis;
 
@@ -31,17 +48,16 @@ class ApisController {
     this.goToView(this.$state.params.view || 'all');
     this.createMode = !$rootScope.devMode && Object.keys($rootScope.graviteeUser).length > 0;
 
-    var that = this;
-    ViewService.list().then(function (response) {
-      that.views = response.data;
-      that.views.unshift({id: 'all', name: 'All APIs'});
+    ViewService.list().then(response => {
+      this.views = response.data;
+      this.views.unshift({id: 'all', name: 'All APIs'});
 
-      if (that.views.length && that.$state.params.view) {
-        that.selectedIndex = _.findIndex(that.views, function (v) {
-          return v.id === that.$state.params.view;
+      if (this.views.length && this.$state.params.view) {
+        this.selectedIndex = _.findIndex(this.views, (v: any) => {
+          return v.id === this.$state.params.view;
         });
       } else {
-        that.selectedIndex = 0;
+        this.selectedIndex = 0;
       }
     });
   }
@@ -70,7 +86,7 @@ class ApisController {
         return that.apis;
       })
       .then( (apis) => {
-        const promises = _.map(apis, (api) => {
+        const promises = _.map(apis, (api: any) => {
           if (that.isOwner(api) && !that.devMode) {
             return that.ApiService.isAPISynchronized(api.id)
               .then((sync) => {
@@ -81,7 +97,7 @@ class ApisController {
         return this.$q
           .all( _.filter( promises, ( p ) => { return p!== undefined; } ) )
           .then((syncList) => {
-              that.syncStatus = _.fromPairs(_.map(syncList, (sync) => {
+              this.syncStatus = _.fromPairs(_.map(syncList, (sync: any) => {
                 return [sync.data.api_id, sync.data.is_synchronized];
               }));
           });

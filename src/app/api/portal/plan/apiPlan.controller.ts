@@ -14,7 +14,14 @@
  * limitations under the License.
  */
 class ApiPortalPlanController {
-  constructor (resolvedPlans, $mdDialog, NotificationService, $state, $scope) {
+  private plans: any;
+  constructor (
+    private resolvedPlans,
+    private $mdDialog: any, //angular.material.IDialogService,
+    private NotificationService,
+    private $state,
+    private $scope
+  ) {
     'ngInject';
     this.plans = resolvedPlans.data;
     this.$mdDialog = $mdDialog;
@@ -26,6 +33,7 @@ class ApiPortalPlanController {
         controller: 'DialogSubscribePlanController',
         templateUrl: 'app/api/portal/plan/subscribePlan.dialog.html',
         clickOutsideToClose: true,
+        // TODO: plan is not a valid option key
         plan: plan,
         resolve: {
           resolvedApplications: function (ApplicationService) {

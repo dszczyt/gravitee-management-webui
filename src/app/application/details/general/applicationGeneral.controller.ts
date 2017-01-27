@@ -13,8 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as _ from 'lodash';
+
 class ApplicationGeneralController {
-  constructor(resolvedApplication, ApplicationService, NotificationService, GroupService, UserService, $state, $scope, $mdDialog) {
+  private application: any;
+  private groups: any[];
+  private initialApplication: any;
+  constructor(
+    private resolvedApplication,
+    private ApplicationService,
+    private NotificationService,
+    private GroupService,
+    private UserService,
+    private $state,
+    private $scope,
+    private $mdDialog
+  ) {
     'ngInject';
     this.application = resolvedApplication.data;
 
@@ -23,13 +37,6 @@ class ApplicationGeneralController {
     }
     this.groups = [this.application.group];
     this.initialApplication = _.cloneDeep(this.application);
-    this.ApplicationService = ApplicationService;
-    this.NotificationService = NotificationService;
-    this.GroupService = GroupService;
-    this.UserService = UserService;
-    this.$scope = $scope;
-    this.$state = $state;
-    this.$mdDialog = $mdDialog;
   }
 
   get(applicationId) {

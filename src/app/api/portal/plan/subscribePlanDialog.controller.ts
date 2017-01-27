@@ -13,15 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-function DialogSubscribePlanController($scope, $state, $mdDialog, plan, resolvedApplications, NotificationService,
-                                       ApplicationService, resolvedSubscriptions) {
+import * as _ from 'lodash';
+
+function DialogSubscribePlanController(
+  $scope,
+  $state,
+  $mdDialog,
+  plan,
+  resolvedApplications,
+  NotificationService,
+  ApplicationService,
+  resolvedSubscriptions
+) {
   'ngInject';
   $scope.plan = plan;
   $scope.applications = resolvedApplications.data;
   $scope.subscribtionsByApplication = _.groupBy(resolvedSubscriptions.data, 'application.id');
 
   $scope.isNotSelectable = function (applicationId) {
-    return _.find($scope.subscribtionsByApplication[applicationId], function (subscribtionByApplication) {
+    return _.find($scope.subscribtionsByApplication[applicationId], function (subscribtionByApplication: any) {
       return subscribtionByApplication.status === 'accepted' || subscribtionByApplication.status === 'pending';
     });
   };

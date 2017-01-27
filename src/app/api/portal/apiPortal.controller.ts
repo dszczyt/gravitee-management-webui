@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 class ApiPortalController {
+  private api: any;
+
   constructor (resolvedApi, $rootScope, $scope) {
     'ngInject';
     this.api = resolvedApi.data;

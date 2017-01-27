@@ -31,7 +31,7 @@ class AnalyticsAPIModelDirective {
 }
 
 class AnalyticsAPIModelController {
-  constructor($scope) {
+  constructor(private $scope) {
     'ngInject';
     this.$scope = $scope;
     if (this.$scope.metadata) {

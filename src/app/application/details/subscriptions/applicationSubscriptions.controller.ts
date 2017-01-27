@@ -13,16 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as _ from 'lodash';
+import * as angular from 'angular';
+import ApiService from "../../../services/api.service";
+
 class ApplicationSubscriptionsController {
-  constructor(resolvedApplication, resolvedSubscriptions, ApplicationService, NotificationService, $mdDialog, $scope,
-  ApiService) {
+  private application: any;
+  private subscriptions: any;
+  private statusFilters: string[];
+  private selectedStatus: string[];
+  private apiNameById: any;
+  private subscriptionsByApi: any;
+
+  constructor(
+    private resolvedApplication,
+    private resolvedSubscriptions,
+    private ApplicationService,
+    private NotificationService,
+    private $mdDialog,
+    private $scope,
+    private ApiService: ApiService
+  ) {
     'ngInject';
     this.application = resolvedApplication.data;
-    this.ApplicationService = ApplicationService;
-    this.ApiService = ApiService;
-    this.NotificationService = NotificationService;
-    this.$mdDialog = $mdDialog;
-
     $scope.data = [];
     this.subscriptions = resolvedSubscriptions.data;
     $scope.showRevokedKeys = false;
@@ -43,11 +56,8 @@ class ApplicationSubscriptionsController {
   }
 
   applyFilters() {
-    var that = this;
-    this.subscriptionsByApi = _.groupBy(_.filter(this.subscriptions, function (subscription) {
-      return _.includes(that.selectedStatus, subscription.status);
-    }), function (sub) {
-      that.apiNameById[sub.plan.apis[0].id] = sub.plan.apis[0].name;
+    this.subscriptionsByApi = _.groupBy(_.filter(this.subscriptions, (subscription: any) => _.includes(this.selectedStatus, subscription.status)), function (sub) {
+      this.apiNameById[sub.plan.apis[0].id] = sub.plan.apis[0].name;
       return sub.plan.apis[0].id;
     });
   }
@@ -115,35 +125,33 @@ class ApplicationSubscriptionsController {
   }
 
   showSubscribeApiModal(ev) {
-    var that = this;
     this.$mdDialog.show({
       controller: 'DialogSubscribeApiController',
       templateUrl: 'app/application/dialog/subscribeApi.dialog.html',
       parent: angular.element(document.body),
       targetEvent: ev,
       clickOutsideToClose: true,
-      application: that.application,
-      subscriptions: that.subscriptions
-    }).then(function (application) {
+      application: this.application,
+      subscriptions: this.subscriptions
+    }).then(application =>{
       if (application) {
-        that.getSubscriptions(application.id);
+        // TODO : check it ! There was no ApiService...
+        this.ApiService.getSubscriptions(application.id);
       }
     });
   }
 
   showExpirationModal(apiId, apiKey) {
-    var _this = this;
-
     this.$mdDialog.show({
       controller: 'DialogApiKeyExpirationController',
       controllerAs: 'dialogApiKeyExpirationController',
       templateUrl: 'app/api/admin/subscriptions/apikey.expiration.dialog.html',
       clickOutsideToClose: true
-    }).then(function (expirationDate) {
+    }).then(expirationDate =>{
       apiKey.expire_at = expirationDate;
 
-      _this.ApiService.updateApiKey(apiId, apiKey).then(() => {
-        _this.NotificationService.show('An expiration date has been settled for API Key');
+      this.ApiService.updateApiKey(apiId, apiKey).then(() => {
+        this.NotificationService.show('An expiration date has been settled for API Key');
       });
     });
   }

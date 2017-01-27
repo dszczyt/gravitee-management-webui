@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 class ApiPortalPagesController {
-  constructor(resolvedPages, $scope, $stateParams, $location) {
+  private pages: any;
+
+  constructor(private resolvedPages, private $scope, private $stateParams, private $location) {
     'ngInject';
     this.pages = resolvedPages.data;
 
     $scope.selectedIndex = 0;
 
-    var that = this;
-    $scope.$watch('selectedIndex', function (current) {
-      if (that.pages.length && !$stateParams.pageId && !current) {
-        $location.url('/apis/' + $stateParams.apiId + '/pages/' + that.pages[0].id);
+    $scope.$watch('selectedIndex', (current) => {
+      if (this.pages.length && !$stateParams.pageId && !current) {
+        $location.url(`/apis/${$stateParams.apiId}/pages/${this.pages[0].id}`);
       }
     });
   }

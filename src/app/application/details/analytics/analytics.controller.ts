@@ -13,17 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as _ from 'lodash';
+import * as moment from 'moment';
+
 class ApplicationAnalyticsController {
-  constructor(ApplicationService, ApiService, resolvedApplication, $q, $scope, $state, $timeout) {
+  private cache: any;
+  private application: any;
+  private analyticsData: any;
+  private colorByBucket: string[];
+  private bgColorByBucket: string[];
+  private timeframe: any;
+  private topsFetched: any;
+  private reportsFetched: any;
+  private indicators: any[];
+  private indicatorChartData: any;
+  private total: any;
+  private indicatorsFetched: any;
+
+  constructor(
+    private ApplicationService,
+    private ApiService,
+    private resolvedApplication,
+    private $q,
+    private $scope,
+    private $state,
+    private $timeout
+  ) {
     'ngInject';
-    this.ApplicationService = ApplicationService;
-    this.ApiService = ApiService;
-    this.$scope = $scope;
     this.$scope.Object = Object;
-    this.$state = $state;
     this.application = resolvedApplication.data;
-    this.$q = $q;
-    this.$timeout = $timeout;
     this.cache = {};
 
     this.$scope.filteredAPIs = [];
@@ -114,7 +132,7 @@ class ApplicationAnalyticsController {
   setTimeframe(timeframeId) {
     var that = this;
 
-    this.timeframe = _.find(this.analyticsData.timeframes, function (timeframe) {
+    this.timeframe = _.find(this.analyticsData.timeframes, function (timeframe: {id: number}) {
       return timeframe.id === timeframeId;
     });
 
@@ -182,7 +200,7 @@ class ApplicationAnalyticsController {
       });
 
       // sort by configured reports
-      this.$scope.chartConfig = _.sortBy(this.$scope.chartConfig, function (report) {
+      this.$scope.chartConfig = _.sortBy(this.$scope.chartConfig, function (report: any) {
         return _.findIndex(that.analyticsData.reports, {title: report.title.text});
       });
     }
@@ -220,7 +238,7 @@ class ApplicationAnalyticsController {
   }
 
   updateCharts() {
-    var _this = this;
+    // var _this = this;
     this.initDataFetching();
 
     var queryFilter = '';
@@ -232,21 +250,19 @@ class ApplicationAnalyticsController {
     }
 
     // reports
-    _.forEach(this.analyticsData.reports, function (report) {
-      var requests = _.map(report.requests, function (req) {
-        return req.service.call(_this.ApplicationService, _this.application.id,
-          req.key,
-          req.query + queryFilter,
-          req.field,
-          req.aggType,
-          _this.analyticsData.range.from,
-          _this.analyticsData.range.to,
-          _this.analyticsData.range.interval);
-      });
+    _.forEach(this.analyticsData.reports, report =>{
+      var requests = _.map(report.requests, (req: any) => req.service.call(this.ApplicationService, this.application.id,
+        req.key,
+        req.query + queryFilter,
+        req.field,
+        req.aggType,
+        this.analyticsData.range.from,
+        this.analyticsData.range.to,
+        this.analyticsData.range.interval));
 
-      _this.$q.all(requests).then(response => {
-        _this.dataFetched(_this.reportsFetched, report.key);
-        _this.$scope.chartConfig[report.id] = {
+      this.$q.all(requests).then(response => {
+        this.dataFetched(this.reportsFetched, report.key);
+        this.$scope.chartConfig[report.id] = {
           labels: _.map(response[0].data.timestamps, function (timestamp) {
             return moment(timestamp).format("YYYY-MM-DD HH:mm:ss");
           }),
@@ -256,55 +272,55 @@ class ApplicationAnalyticsController {
         // Push data for hits by 'something'
         if (response[0] && response[0].data.values) {
           if (report.id === 'apis') {
-            _this.fetchAPIAnalytics(report, response);
+            this.fetchAPIAnalytics(report, response);
           } else {
-            _this.pushHitsByData(report, response);
+            this.pushHitsByData(report, response);
           }
         }
       });
     });
 
     // indicators
-    _this.indicators = [];
-    _this.indicatorChartData = {labels: [], datasets: [{data: [], backgroundColor: []}]};
+    this.indicators = [];
+    this.indicatorChartData = {labels: [], datasets: [{data: [], backgroundColor: []}]};
     // first we need to get total calls to produce ratios
-    var totalIndicator = _.find(_this.analyticsData.indicators, 'isTotal');
+    var totalIndicator: any = _.find(this.analyticsData.indicators, 'isTotal');
     var request = totalIndicator.request.call(this.ApplicationService, this.application.id,
-      _this.analyticsData.range.from,
-      _this.analyticsData.range.to,
-      _this.analyticsData.range.interval,
+      this.analyticsData.range.from,
+      this.analyticsData.range.to,
+      this.analyticsData.range.interval,
       totalIndicator.key,
       totalIndicator.query + queryFilter);
 
     let data = [];
 
-    delete _this.indicatorChartData;
+    delete this.indicatorChartData;
 
     request.then(response => {
-      _this.dataFetched(_this.indicatorsFetched, 'total');
+      this.dataFetched(this.indicatorsFetched, 'total');
       totalIndicator.value = response.data.hits;
       this.total = totalIndicator.value;
 
       let i = 0;
 
       // then we get other indicators
-      var indicators = _.filter(this.analyticsData.indicators, function (indicator) {
+      var indicators: any = _.filter(this.analyticsData.indicators, function (indicator: any) {
         return !indicator.isTotal;
       });
-      _.forEach(indicators, function (indicator) {
-        var request = indicator.request.call(_this.ApplicationService, _this.application.id,
-          _this.analyticsData.range.from,
-          _this.analyticsData.range.to,
-          _this.analyticsData.range.interval,
+      _.forEach(indicators, indicator =>{
+        var request = indicator.request.call(this.ApplicationService, this.application.id,
+          this.analyticsData.range.from,
+          this.analyticsData.range.to,
+          this.analyticsData.range.interval,
           indicator.key,
           indicator.query + queryFilter);
 
         request.then(response => {
-          _this.dataFetched(_this.indicatorsFetched, indicator.key);
+          this.dataFetched(this.indicatorsFetched, indicator.key);
           indicator.value = response.data.hits;
           i++;
           if (indicator.value !== undefined) {
-            let percentage = _.round(indicator.value / _this.total * 100);
+            let percentage = _.round(indicator.value / this.total * 100);
             if (percentage !== 0) {
               data.push({
                 name: indicator.title + ': (' + percentage + '%) ' + indicator.value + ' hits',
@@ -313,11 +329,9 @@ class ApplicationAnalyticsController {
               });
             }
 
-            if (indicators.length === i && _.filter(indicators, function (indicator) {
-                return indicator.value !== 0;
-              }).length) {
-              _this.indicatorChartData = {
-                title: {text: _this.total + ' hits'},
+            if (indicators.length === i && _.filter(indicators, (indicator: any) => indicator.value !== 0).length) {
+              this.indicatorChartData = {
+                title: {text: `${this.total} hits`},
                 series: [{
                   name: 'Percent hits',
                   data: data
@@ -354,14 +368,14 @@ class ApplicationAnalyticsController {
   }
 
   setUpDataFetchSettings() {
-    var _this = this;
     this.$scope.fetchDone = true;
-    this.$scope.$on('dataFetched', function() {
-      var analyticsFetched = {};
-      analyticsFetched.tops = _.every(_this.topsFetched, Boolean);
-      analyticsFetched.reports = _.every(_this.reportsFetched, Boolean);
-      analyticsFetched.indicators = _.every(_this.indicatorsFetched, Boolean);
-      _this.$scope.fetchDone = _.every(analyticsFetched, Boolean);
+    this.$scope.$on('dataFetched', () =>{
+      var analyticsFetched = {
+        tops: _.every(this.topsFetched, Boolean),
+        reports: _.every(this.reportsFetched, Boolean),
+        indicators: _.every(this.indicatorsFetched, Boolean)
+      };
+      this.$scope.fetchDone = _.every(analyticsFetched, Boolean);
     });
   }
 

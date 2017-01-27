@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as _ from 'lodash';
+
 function DialogSubscriptionCreateController($scope, $mdDialog, plans, ApplicationService) {
   'ngInject';
   this.plans = plans;
@@ -42,9 +44,9 @@ function DialogSubscriptionCreateController($scope, $mdDialog, plans, Applicatio
     this.plansWithSubscriptions = [];
     this.selectedPlan = null;
     if (this.selectedApp) {
-      _.map(this.plans, (plan) => {
+      _.map(this.plans, (plan: {id: number}) => {
         ApplicationService.listSubscriptions(this.selectedApp.id, plan.id).then((response) => {
-          var subs = _.filter(response.data, (sub) => {
+          var subs = _.filter(response.data, (sub: {status: string}) => {
             return sub.status === "pending" || sub.status === "accepted";
           });
           if (subs.length > 0) {

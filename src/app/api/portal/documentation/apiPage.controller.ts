@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 class ApiPortalPageController {
-  constructor (resolvedApi, resolvedPage, DocumentationService) {
+  private api: any;
+  private page: any;
+
+  constructor (private resolvedApi, private resolvedPage, private DocumentationService) {
     'ngInject';
     if (resolvedPage) {
       this.api = resolvedApi.data;

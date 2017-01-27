@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 class ApplicationController {
-  constructor(resolvedApplication, $state, $scope, $rootScope, UserService) {
+  private application: any;
+  constructor(
+    private resolvedApplication,
+    private $state,
+    private $scope,
+    private $rootScope,
+    private UserService
+  ) {
 		'ngInject';
 		this.application = resolvedApplication.data;
 
     $rootScope.currentResource = this.application.name;
 
-		this.$state = $state;
-		this.$scope = $scope;
-    this.UserService = UserService;
 		this.selectTab();
 	}
 

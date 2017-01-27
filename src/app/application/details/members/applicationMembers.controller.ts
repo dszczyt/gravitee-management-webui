@@ -13,15 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as angular from 'angular';
+
 class ApplicationMembersController {
-  constructor(resolvedApplication, resolvedMembers, ApplicationService, GroupService, NotificationService, $mdDialog) {
+  private application: any;
+  private members: any;
+  private membershipTypes: string[];
+  private groupMembers: any;
+
+  constructor(
+    private resolvedApplication,
+    private resolvedMembers,
+    private ApplicationService,
+    private GroupService,
+    private NotificationService,
+    private $mdDialog
+  ) {
     'ngInject';
     this.application = resolvedApplication.data;
     this.members = resolvedMembers.data;
     this.membershipTypes = [ 'owner', 'user' ];
-    this.ApplicationService = ApplicationService;
-    this.NotificationService = NotificationService;
-    this.$mdDialog = $mdDialog;
 
     if (this.application.group) {
       GroupService.getMembers(this.application.group.id).then((members) => {

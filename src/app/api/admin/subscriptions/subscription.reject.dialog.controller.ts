@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-function DialogSubscriptionRejectController($scope, $mdDialog) {
+function DialogSubscriptionRejectController($scope, $mdDialog: angular.material.IDialogService) {
   'ngInject';
 
   this.hide = function () {
