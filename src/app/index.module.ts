@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import angular = require("angular");
 import 'angular-aria';
 import 'angular-animate';
 import 'angular-material';
+import 'angular-sanitize';
 // require('raml-parser');
 // require('api-console/dist/scripts/api-console');
 //require('api-console/dist/scripts/api-console-vendor');
@@ -23,7 +25,22 @@ require('angular-material-icons');
 require('angular-ui-codemirror');
 require('angular-material-data-table');
 require('angular-cookies');
+require('angular-messages');
 require('dragular');
+require('v-accordion');
+require('angular-schema-form');
+require('ngclipboard');
+require('angular-ui-validate');
+require('read-more/js/directives/readmore');
+require('angular-timeline');
+require('angular-utf8-base64');
+require('ng-file-upload');
+require('md-steppers');
+require('angular-ui-tree');
+require('angular-jwt');
+require('ng-showdown');
+
+import '../constants';
 
 import * as moment from 'moment';
 
@@ -126,12 +143,11 @@ import TagsController from './configuration/admin/tags/tags.controller';
 import TagService from './services/tag.service';
 import DeleteTagDialogController from './configuration/admin/tags/delete.tag.dialog.controller';
 import ChartDirective from './components/chart/chart.directive';
-import angular = require("angular");
 
-angular.module('gravitee', ['ui.router', 'ngMaterial', /*'ramlConsoleApp', 'ng-showdown', 'swaggerUi',*/
+angular.module('gravitee', ['ui.router', 'ngMaterial', /*'ramlConsoleApp',*/ 'ng-showdown', /*'swaggerUi',*/
   'ngMdIcons', 'ui.codemirror', 'md.data.table', 'ngCookies', 'dragularModule', 'readMore',
   'ngMessages', 'vAccordion', 'schemaForm', 'ngclipboard', 'ui.validate', 'gvConstants', 'angular-timeline',
-  'ab-base64',  'ngFileUpload', 'md-steppers', 'ui.tree', 'angular-jwt'])
+  /*'ab-base64',*/  'ngFileUpload', 'md-steppers', 'ui.tree', 'angular-jwt'])
   .config(config)
   .config(routerConfig)
   .config(interceptorConfig)
