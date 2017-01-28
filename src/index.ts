@@ -1,6 +1,6 @@
 import 'angular';
 import 'angular-ui-router';
-import routesConfig from './routes';
+// import routesConfig from './routes';
 
 import './index.scss';
 
