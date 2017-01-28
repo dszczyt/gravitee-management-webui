@@ -18,7 +18,7 @@ function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: 
   $stateProvider
     .state('home', {
       url: '/',
-      controller: function ($state) {
+      controller: function ($state: ng.ui.IStateService) {
         $state.go('apis.list');
       },
       data: {
@@ -27,7 +27,8 @@ function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: 
     })
     .state('apis', {
       url: '/apis',
-      templateUrl: 'app/api/apis.html'
+      templateUrl: 'app/api/apis.html',
+      abstract: true
     })
     .state('apis.new', {
       url: '/new',
@@ -44,7 +45,7 @@ function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: 
       controller: 'ApisController',
       controllerAs: 'apisCtrl',
       resolve: {
-        resolvedApis: function ($stateParams, ApiService) {
+        resolvedApis: function (ApiService) {
           return ApiService.list();
         }
       },

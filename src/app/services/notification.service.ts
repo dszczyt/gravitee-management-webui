@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 class NotificationService {
-  private show: (message, isError) => any;
-  private showError: (error, message) => any;
-
-  constructor ($mdToast) {
+  constructor (private $mdToast) {
     'ngInject';
+  }
 
-    this.show = function (message, isError) {
-      $mdToast.show(
-        $mdToast.simple()
+  show(message, isError) {
+      this.$mdToast.show(
+        this.$mdToast.simple()
           .content(message.statusText || message)
           .position('bottom right')
           .hideDelay(3000)
           .theme(isError ? 'toast-error' : 'toast-success')
       );
-    };
+    }
 
-    this.showError = function (error, message) {
+  showError(error, message?) {
       this.show(message || (
         error.data ?
           Array.isArray(error.data) ?
@@ -38,8 +36,7 @@ class NotificationService {
             : (error.data.message || error.data)
           : error
         ), true);
-    };
-  }
+    }
 }
 
 export default NotificationService;
