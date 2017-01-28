@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class UserService {
+import * as _ from 'lodash';
 
-  constructor($http, $rootScope, Constants) {
+class UserService {
+  private baseURL: string;
+  private usersURL: string;
+  private userURL: string;
+
+  constructor(private $http, private $rootScope, Constants) {
     'ngInject';
-    this.$http = $http;
-    this.$rootScope = $rootScope;
     this.baseURL = Constants.baseURL;
-    this.usersURL = Constants.baseURL + 'users/';
-    this.userURL = Constants.baseURL + 'user/';
+    this.usersURL = `${Constants.baseURL}users/`;
+    this.userURL = `${Constants.baseURL}user/`;
   }
 
   list() {
@@ -33,19 +36,19 @@ class UserService {
   }
 
   listTeams(code) {
-    return this.$http.get(this.usersURL + code + '/teams');
+    return this.$http.get(`${this.usersURL + code}/teams`);
   }
 
   create(user) {
-    return this.$http.post(this.baseURL + 'users', user);
+    return this.$http.post(`${this.baseURL}users`, user);
   }
 
   register(user) {
-    return this.$http.post(this.usersURL + 'register', user);
+    return this.$http.post(`${this.usersURL}register`, user);
   }
 
 	search(query) {
-		return this.$http.get(this.usersURL + "?query=" + query);
+		return this.$http.get(`${this.usersURL}?query=${query}`);
 	}
 
 	isUserInRoles(roles) {
@@ -77,28 +80,28 @@ class UserService {
   login(user) {
     var req = {
       method: 'POST',
-      url: this.userURL + 'login',
+      url: `${this.userURL}login`,
       headers: {
-        'Authorization': "Basic " + btoa(user.username + ":" + user.password)
+        'Authorization': `Basic ${btoa(user.username + ":" + user.password)}`
       }
     };
     return this.$http(req);
   }
 
   logout() {
-    return this.$http.post(this.userURL + 'logout');
+    return this.$http.post(`${this.userURL}logout`);
   }
 
   currentUserPicture() {
-    return this.$http.get(this.userURL + this.$rootScope.graviteeUser.username + '/picture');
+    return this.$http.get(`${this.userURL + this.$rootScope.graviteeUser.username}/picture`);
   }
 
   save(user) {
-    return this.$http.put(this.userURL + this.$rootScope.graviteeUser.username + '/', {username: user.username, picture: user.picture});
+    return this.$http.put(`${this.userURL + this.$rootScope.graviteeUser.username}/`, {username: user.username, picture: user.picture});
   }
 
   listPlanSubscription() {
-    return this.$http.get(this.userURL + 'subscriptions');
+    return this.$http.get(`${this.userURL}subscriptions`);
   }
 }
 

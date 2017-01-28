@@ -13,21 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as _ from 'lodash';
+
 class InstancesController {
-  constructor(resolvedInstances, $scope) {
+  private instances: any;
+  private startedInstances: any;
+  private _displayEmptyMode: boolean;
+
+  constructor(resolvedInstances, private $scope) {
 		'ngInject';
     this.instances = resolvedInstances.data;
-    this.$scope = $scope;
     this.$scope.displayAllInstances = false;
     this.startedInstances = _.filter(this.instances, { 'state': 'started'});
-    this.displayEmptyMode = this.startedInstances.length === 0;
+    this._displayEmptyMode = this.startedInstances.length === 0;
 	}
 
 	switchDisplayInstances(displayAllInstances) {
     if (!displayAllInstances) {
-      this.displayEmptyMode = this.startedInstances.length === 0;
+      this._displayEmptyMode = this.startedInstances.length === 0;
     } else {
-      this.displayEmptyMode = this.instances.length === 0;
+      this._displayEmptyMode = this.instances.length === 0;
     }
     this.$scope.displayAllInstances = displayAllInstances;
   }

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 class ResourceService {
+  private resourcesURL: string;
 
-  constructor($http, Constants) {
+  constructor(private $http, Constants) {
     'ngInject';
-    this.$http = $http;
-    this.resourcesURL = Constants.baseURL + 'resources/';
+    this.resourcesURL = `${Constants.baseURL}resources/`;
   }
 
   list() {
@@ -30,7 +30,7 @@ class ResourceService {
   }
 
   getSchema(resourceId) {
-    return this.$http.get(this.resourcesURL + resourceId + '/schema');
+    return this.$http.get(`${this.resourcesURL + resourceId}/schema`);
   }
 }
 

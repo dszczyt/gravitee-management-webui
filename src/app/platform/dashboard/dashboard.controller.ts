@@ -13,18 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class DashboardController {
+import * as moment from 'moment';
+import * as _ from 'lodash';
 
-  constructor($log, EventsService, AnalyticsService, ApiService, ApplicationService, $scope, $state, $timeout) {
+class DashboardController {
+  private eventLabels: any;
+  private eventTypes: any[];
+  private selectedAPIs: any[];
+  private selectedApplications: any[];
+  private selectedEventTypes: any[];
+  private beginDate: Date;
+  private endDate: Date;
+  private now: Date;
+  private analyticsData: any;
+  private events: any;
+  private query: any;
+  private timeframe: any;
+
+  constructor(
+    private EventsService,
+    private AnalyticsService,
+    private ApiService,
+    private ApplicationService,
+    private $scope,
+    private $state,
+  ) {
     'ngInject';
-    this.$log = $log;
-    this.EventsService = EventsService;
-    this.AnalyticsService = AnalyticsService;
-    this.ApiService = ApiService;
-    this.ApplicationService = ApplicationService;
-    this.$scope = $scope;
-    this.$state = $state;
-    this.$timeout = $timeout;
     this.eventLabels = {};
     this.eventTypes = [];
     this.selectedAPIs = [];
@@ -75,7 +89,7 @@ class DashboardController {
   }
 
   selectEvent(eventType) {
-    var idx = this.selectedEventTypes.indexOf(eventType);
+    let idx = this.selectedEventTypes.indexOf(eventType);
     if (idx > -1) {
       this.selectedEventTypes.splice(idx, 1);
     }
@@ -90,16 +104,17 @@ class DashboardController {
   }
 
   searchEvents() {
-    var from = moment(this.beginDate).unix() * 1000;
-    var to = moment(this.endDate).unix() * 1000;
+    let from = moment(this.beginDate).unix() * 1000;
+    let to = moment(this.endDate).unix() * 1000;
     if (from === to) {
       to = moment(this.endDate).add(24, 'hours').unix() * 1000;
     }
 
     // set apis
-    var apis = this.selectedAPIs.map(function(api){ return api.id; }).join(",");
+    let apis = this.selectedAPIs.map(function(api){ return api.id; }).join(",");
     // set event types
-    var types = this.eventTypes;
+    // TODO: types is type any[], and then string !!! beurk beurk beurk
+    let types: any = this.eventTypes;
     if (this.selectedEventTypes.length > 0) {
       types = this.selectedEventTypes.join(",");
     }
@@ -116,7 +131,7 @@ class DashboardController {
     if (query) {
       return this.ApiService.list().then(function(response) {
         return _.filter(response.data,
-          function(api) {
+          function(api: any) {
             return api.name.toUpperCase().indexOf(query.toUpperCase()) > -1;
           });
       });
@@ -127,7 +142,7 @@ class DashboardController {
     if (query) {
       return this.ApplicationService.list().then(function(response) {
         return _.filter(response.data,
-          function(application) {
+          function(application: any) {
             return application.name.toUpperCase().indexOf(query.toUpperCase()) > -1;
           });
       });
@@ -242,7 +257,7 @@ class DashboardController {
   setTimeframe(timeframeId) {
     var that = this;
 
-    this.timeframe = _.find(this.analyticsData.timeframes, function (timeframe) {
+    this.timeframe = _.find(this.analyticsData.timeframes, function (timeframe: {id: number}) {
       return timeframe.id === timeframeId;
     });
 

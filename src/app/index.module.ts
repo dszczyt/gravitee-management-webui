@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as moment from 'moment';
 import config from './index.config';
 import routerConfig from './index.route';
 import interceptorConfig from './index.interceptor';

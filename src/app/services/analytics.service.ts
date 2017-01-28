@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 class AnalyticsService {
+  private analyticsURL: string;
 
-  constructor($http, Constants) {
+  constructor(private $http, Constants) {
     'ngInject';
-    this.$http = $http;
-    this.analyticsURL = Constants.baseURL + 'platform/analytics';
+    this.analyticsURL = `${Constants.baseURL}platform/analytics`;
   }
 
   hitsBy(key, query, field, aggType, from, to, interval) {

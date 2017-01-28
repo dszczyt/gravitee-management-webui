@@ -15,9 +15,8 @@
  */
 class PageSwaggerHttpClientService {
 
-  constructor($q) {
+  constructor(private $q) {
     'ngInject';
-    this.$q = $q;
   }
 
   execute(options) {

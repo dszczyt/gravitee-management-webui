@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 class InstanceController {
+  private instance: any;
+
   constructor(resolvedInstance, $rootScope) {
 		'ngInject';
     this.instance = resolvedInstance.data;

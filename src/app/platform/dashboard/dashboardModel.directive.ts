@@ -32,9 +32,8 @@ class DashboardModelDirective {
 }
 
 class DashboardModelController {
-  constructor($scope) {
+  constructor(private $scope) {
     'ngInject';
-    this.$scope = $scope;
     if (this.$scope.metadata) {
       this.$scope.entity = JSON.parse(this.$scope.metadata);
       this.$scope.entity.id = this.$scope.id;

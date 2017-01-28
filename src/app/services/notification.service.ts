@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 class NotificationService {
+  private show: (message, isError) => any;
+  private showError: (error, message) => any;
+
   constructor ($mdToast) {
     'ngInject';
 

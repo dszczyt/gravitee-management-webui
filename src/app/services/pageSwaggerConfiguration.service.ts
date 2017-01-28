@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as _ from 'lodash';
+
 class PageSwaggerConfigurationService {
 
-  constructor($q, DocumentationService) {
+  constructor(private $q, private DocumentationService) {
     'ngInject';
-    this.$q = $q;
-    this.DocumentationService = DocumentationService;
   }
 
   execute(swaggerUrl, swaggerSpec) {

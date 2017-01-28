@@ -13,10 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as _ from 'lodash';
+
 class InstanceEnvironmentController {
-  constructor(resolvedInstance, $scope) {
+  private instance: any;
+  private systemPropertiesProvider: any;
+
+  constructor(resolvedInstance, private $scope) {
     'ngInject';
-    this.$scope = $scope;
     this.instance = resolvedInstance.data;
     this.systemPropertiesProvider = this.sort(this.instance.systemProperties);
     this.instance.systemProperties = this.systemPropertiesProvider;

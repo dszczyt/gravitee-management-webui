@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 class ViewService {
+  private viewsURL: string;
 
-  constructor($http, Constants) {
+  constructor(private $http, Constants) {
     'ngInject';
-    this.$http = $http;
-    this.viewsURL = Constants.baseURL + 'configuration/views/';
+    this.viewsURL = `${Constants.baseURL}configuration/views/`;
   }
 
   list() {

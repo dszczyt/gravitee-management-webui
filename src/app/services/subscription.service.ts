@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 class SubscriptionService {
+  private subscriptionsURL: string;
 
-  constructor($http, Constants) {
+  constructor(private $http, Constants) {
     'ngInject';
-    this.$http = $http;
-    this.subscriptionsURL = Constants.baseURL + 'subscriptions/';
+    this.subscriptionsURL = `${Constants.baseURL}subscriptions/`;
   }
 
   list(plan, application) {
-    let url = this.subscriptionsURL;
+    let url: string = this.subscriptionsURL;
     if (plan) {
       url += '?plan=' + plan;
     }

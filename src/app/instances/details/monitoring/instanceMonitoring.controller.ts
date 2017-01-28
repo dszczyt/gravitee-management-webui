@@ -13,7 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as _ from 'lodash';
+import * as moment from 'moment';
+
 class InstanceMonitoringController {
+  private monitoringData: any;
+  private instanceStarted: boolean;
+  private monitoringCpuChartData: {series: [{name: string; data: any[]}]};
+  private monitoringHeapChartData: {series: [{name: string; data: any[]}]};
+
   constructor(resolvedMonitoringData, $stateParams, resolvedInstance, InstancesService, $scope) {
     'ngInject';
     this.monitoringData = resolvedMonitoringData.data;

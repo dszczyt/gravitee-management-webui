@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 class TagService {
+  private tagsURL: string;
 
-  constructor($http, Constants) {
+  constructor(private $http, Constants) {
     'ngInject';
-    this.$http = $http;
-    this.tagsURL = Constants.baseURL + 'configuration/tags/';
+    this.tagsURL = `${Constants.baseURL}configuration/tags/`;
   }
 
   list() {

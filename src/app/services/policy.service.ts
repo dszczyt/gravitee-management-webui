@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 class PolicyService {
+  private policiesURL: string;
 
-  constructor($http, Constants) {
+  constructor(private $http, Constants) {
     'ngInject';
-    this.$http = $http;
-    this.policiesURL = Constants.baseURL + 'policies/';
+    this.policiesURL = `${Constants.baseURL}policies/`;
   }
 
   list() {

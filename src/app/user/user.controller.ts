@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 class UserController {
-  constructor(UserService, $rootScope, NotificationService, $scope) {
-    'ngInject';
+  private originalPicture: any;
 
-    this.UserService = UserService;
-    this.$rootScope = $rootScope;
-    this.NotificationService = NotificationService;
-    this.$scope = $scope;
+  constructor(private UserService, private $rootScope, private NotificationService, private $scope) {
+    'ngInject';
   }
 
   save() {
-    var that = this;
-    this.UserService.save(this.$rootScope.graviteeUser).then(function () {
-      that.NotificationService.show("User updated with success");
-      that.$scope.formUser.$setPristine();
-      that.originalPicture = that.$rootScope.graviteeUser.picture;
+    this.UserService.save(this.$rootScope.graviteeUser).then(() =>{
+      this.NotificationService.show("User updated with success");
+      this.$scope.formUser.$setPristine();
+      this.originalPicture = this.$rootScope.graviteeUser.picture;
     });
   }
 

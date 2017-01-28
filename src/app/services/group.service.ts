@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 class GroupService {
+  private groupsURL: string;
 
-  constructor($http, Constants) {
+  constructor(private $http, Constants) {
     'ngInject';
-    this.$http = $http;
-    this.groupsURL = Constants.baseURL + 'configuration/groups';
+    this.groupsURL = `${Constants.baseURL}configuration/groups`;
   }
 
   getEmptyGroup() {

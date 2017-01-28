@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 class FetcherService {
+  private resourcesURL: string;
 
-  constructor($http, Constants) {
+  constructor(private $http, Constants) {
     'ngInject';
-    this.$http = $http;
-    this.resourcesURL = Constants.baseURL + 'fetchers/';
+    this.resourcesURL = `${Constants.baseURL}fetchers/`;
   }
 
   list() {
-    let url = this.resourcesURL;
-    url += "?expand=schema";
+    let url = `${this.resourcesURL}?expand=schema`;
     return this.$http.get(url);
   }
 }

@@ -104,7 +104,7 @@ class ApplicationService {
   }
 
   renewApiKey(applicationId, subscriptionId) {
-    return this.$http.post(this.subscriptionsURL(applicationId) + subscriptionId);
+    return this.$http.post(this.subscriptionsURL(applicationId) + subscriptionId, '');
   }
 
   revokeApiKey(applicationId, subscriptionId, apiKey) {

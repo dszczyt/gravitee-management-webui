@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 class InstancesService {
+  private instancesURL: string;
 
-  constructor($http, Constants) {
+  constructor(private $http, Constants) {
     'ngInject';
-    this.$http = $http;
-    this.instancesURL = Constants.baseURL + 'instances/';
+    this.instancesURL = `${Constants.baseURL}instances/`;
   }
 
   list() {

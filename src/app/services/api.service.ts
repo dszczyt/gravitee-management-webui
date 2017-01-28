@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 class ApiService {
+  private apisURL: string;
 
-  constructor($http, Constants, $q) {
+  constructor(private $http, Constants, private $q) {
     'ngInject';
-    this.$http = $http;
-    this.apisURL = Constants.baseURL + 'apis/';
-    this.$q = $q;
+    this.apisURL = `${Constants.baseURL}apis/`;
   }
 
   get(name) {

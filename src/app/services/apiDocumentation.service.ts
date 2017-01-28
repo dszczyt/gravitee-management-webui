@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class DocumentationService {
+import * as _ from 'lodash';
 
-  constructor($http, Constants) {
+class DocumentationService {
+  private swaggerConfigurationCache: any;
+  private documentationURL: (apiId: string) => string;
+
+  constructor(private $http, Constants) {
     'ngInject';
-    this.$http = $http;
     this.swaggerConfigurationCache = {};
-    this.documentationURL = function (apiId) {
-      return Constants.baseURL + 'apis/' + apiId + '/pages/';
-    };
+    this.documentationURL = apiId => `${Constants.baseURL}apis/${apiId}/pages/`;
   }
 
   list(apiId) {
