@@ -16,7 +16,14 @@
 import 'angular-aria';
 import 'angular-animate';
 import 'angular-material';
-import 'api-console';
+// require('raml-parser');
+// require('api-console/dist/scripts/api-console');
+//require('api-console/dist/scripts/api-console-vendor');
+require('angular-material-icons');
+require('angular-ui-codemirror');
+require('angular-material-data-table');
+require('angular-cookies');
+require('dragular');
 
 import * as moment from 'moment';
 
@@ -121,7 +128,7 @@ import DeleteTagDialogController from './configuration/admin/tags/delete.tag.dia
 import ChartDirective from './components/chart/chart.directive';
 import angular = require("angular");
 
-angular.module('gravitee', ['ui.router', 'ngMaterial', 'ramlConsoleApp', 'ng-showdown', 'swaggerUi',
+angular.module('gravitee', ['ui.router', 'ngMaterial', /*'ramlConsoleApp', 'ng-showdown', 'swaggerUi',*/
   'ngMdIcons', 'ui.codemirror', 'md.data.table', 'ngCookies', 'dragularModule', 'readMore',
   'ngMessages', 'vAccordion', 'schemaForm', 'ngclipboard', 'ui.validate', 'gvConstants', 'angular-timeline',
   'ab-base64',  'ngFileUpload', 'md-steppers', 'ui.tree', 'angular-jwt'])
