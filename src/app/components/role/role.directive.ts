@@ -24,7 +24,7 @@ const RoleDirective: ng.IDirectiveFactory = () => ({
 
     if(!(ctr.UserService.isUserInRoles(roles))) {
       // console.log(arguments);
-      angular.element(elem).hide();
+      // angular.element(elem).hide();
     }
   },
   controller: RoleController
