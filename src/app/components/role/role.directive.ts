@@ -13,23 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class RoleDirective {
-  private restrict: string;
-  private controller;
-
-  constructor () {
-    this.restrict = 'AE';
-    this.controller = RoleController;
-  }
-
-  link(scope, elem, attr, ctr) {
+import UserService from "../../services/user.service";
+const RoleDirective: ng.IDirectiveFactory = () => ({
+  restrict: 'AE',
+  link: (scope, elem, attr: any, ctr: {UserService: UserService}) => {
     let roles = attr.graviteeRolesAllowed.replace(/ /g,'').split(',');
 
-    if(!ctr.UserService.isUserInRoles(roles)){
+    if(!(ctr.UserService.isUserInRoles(roles))) {
       elem.hide();
     }
-  }
-}
+  },
+  controller: RoleController
+});
+
+// class RoleDirective {
+//   private restrict: string;
+//   private controller;
+//
+//   constructor () {
+//     'ngInject';
+//     this.restrict = 'AE';
+//     this.controller = RoleController;
+//   }
+//
+//   link(scope, elem, attr, ctr) {
+//     let roles = attr.graviteeRolesAllowed.replace(/ /g,'').split(',');
+//
+//     if(!ctr.UserService.isUserInRoles(roles)){
+//       elem.hide();
+//     }
+//   }
+// }
 
 class RoleController {
   constructor (private UserService) {

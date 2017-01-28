@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export const DocumentationDirective: ng.IDirectiveFactory = () => ({
+const DocumentationDirective: ng.IDirectiveFactory = () => ({
   scope: {
     filecontent: '=',
     filename: '='
@@ -33,3 +33,4 @@ export const DocumentationDirective: ng.IDirectiveFactory = () => ({
     });
   }
 });
+export default DocumentationDirective;

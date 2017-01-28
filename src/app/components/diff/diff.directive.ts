@@ -15,19 +15,13 @@
  */
 import * as JsDiff from 'jsdiff';
 
-class DiffDirective {
-  private restrict: string;
-  private scope: any;
-
-  constructor() {
-    this.restrict = 'AE';
-    this.scope = {
-      oldValue: "=oldValue",
-      newValue: "=newValue"
-    };
-  }
-
-  link(scope, elem) {
+const DiffDirective: ng.IDirectiveFactory = () => ({
+  restrict: 'AE',
+  scope: {
+    oldValue: '=',
+    newValue: '='
+  },
+  link: (scope: any, elem) => {
     scope.$watch('oldValue', function(){
       var oldValue = scope.oldValue;
       var newValue = scope.newValue;
@@ -48,7 +42,6 @@ class DiffDirective {
       }
     });
   }
-}
-
+});
 
 export default DiffDirective;
