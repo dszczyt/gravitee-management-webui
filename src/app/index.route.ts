@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import ApiService from "./services/api.service";
 function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider) {
   'ngInject';
   $stateProvider
     .state('home', {
       url: '/',
-      controller: function ($state: ng.ui.IStateService) {
-        $state.go('apis.list');
-      },
+      redirectTo: 'apis.list',
       data: {
         devMode: true
       }
@@ -45,9 +44,7 @@ function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: 
       controller: 'ApisController',
       controllerAs: 'apisCtrl',
       resolve: {
-        resolvedApis: function (ApiService) {
-          return ApiService.list();
-        }
+        resolvedApis: (ApiService: ApiService) => ApiService.list()
       },
       data: {
         menu: {

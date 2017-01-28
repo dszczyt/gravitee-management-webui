@@ -44,7 +44,7 @@ class ApisController {
     this.resolvedApis = resolvedApis;
 
     this.apisScrollAreaHeight = this.$state.current.name === 'apis.list' ? 195 : 90;
-    this.isAPIsHome = this.$state.current.name.startsWith('apis') ? true : false;
+    this.isAPIsHome = this.$state.current.name.startsWith('apis');
     this.goToView(this.$state.params.view || 'all');
     this.createMode = !$rootScope.devMode && Object.keys($rootScope.graviteeUser).length > 0;
 
@@ -97,7 +97,7 @@ class ApisController {
         return this.$q
           .all( _.filter( promises, ( p ) => { return p!== undefined; } ) )
           .then((syncList) => {
-              this.syncStatus = _.fromPairs(_.map(syncList, (sync: any) => {
+              this.syncStatus = _.zipObject(_.map(syncList, (sync: any) => {
                 return [sync.data.api_id, sync.data.is_synchronized];
               }));
           });

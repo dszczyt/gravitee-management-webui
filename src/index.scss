@@ -1,5 +1,6 @@
-/* import './app/_constants'; */
-/* import '~angular-material/angular-material'; */
+@import './app/_constants';
+@import '~angular-material/angular-material';
+@import './app/index.scss';
 
 body {
   background-color: lightgrey;

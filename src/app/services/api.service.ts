@@ -25,7 +25,7 @@ class ApiService {
     return this.$http.get(this.apisURL + name);
   }
 
-  list(view) {
+  list(view?: string) {
     return this.$http.get(this.apisURL + (view ? '?view=' + view : ''));
   }
 

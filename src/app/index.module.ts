@@ -155,7 +155,7 @@ angular.module('gravitee', ['ui.router', 'ngMaterial', /*'ramlConsoleApp',*/ 'ng
   .config(routerConfig)
   .config(interceptorConfig)
   .config(delegatorConfig)
-  .config(function ($mdThemingProvider) {
+  .config(function ($mdThemingProvider: ng.material.IThemingProvider) {
     $mdThemingProvider.theme('default')
       .primaryPalette('blue-grey')
       .accentPalette('blue');

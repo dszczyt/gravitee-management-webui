@@ -105,7 +105,7 @@
     "gulp-webpack": "~1.5.0",
     "html-loader": "^0.4.3",
     "html-webpack-plugin": "^2.9.0",
-    "http-proxy-middleware": "~0.9.0",
+    "http-proxy-middleware": "^0.9.1",
     "jasmine": "^2.4.1",
     "jshint-loader": "~0.8.3",
     "jshint-stylish": "~2.0.0",

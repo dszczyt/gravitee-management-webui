@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import NotificationService from "./services/notification.service";
+
 function interceptorConfig($httpProvider: ng.IHttpProvider) {
   'ngInject';
   $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

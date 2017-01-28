@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 import UserService from "../../services/user.service";
+import IDirective = angular.IDirective;
+import * as angular from "angular";
+
 const RoleDirective: ng.IDirectiveFactory = () => ({
   restrict: 'AE',
-  link: (scope, elem, attr: any, ctr: {UserService: UserService}) => {
-    let roles = attr.graviteeRolesAllowed.replace(/ /g,'').split(',');
+  link: function (scope, elem, attr, ctr: {UserService: UserService}) {
+    let roles = attr['graviteeRolesAllowed'].replace(/ /g,'').split(',');
 
     if(!(ctr.UserService.isUserInRoles(roles))) {
-      elem.hide();
+      // console.log(arguments);
+      angular.element(elem).hide();
     }
   },
   controller: RoleController
-});
+} as IDirective);
 
 // class RoleDirective {
 //   private restrict: string;
