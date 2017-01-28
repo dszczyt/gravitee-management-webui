@@ -4,10 +4,13 @@
   "description": "Gravitee.io APIM - Portal",
   "dependencies": {
     "angular": "^1.5.0",
+    "angular-animate": "^1.5.0",
+    "angular-aria": "^1.5.0",
     "angular-drag-and-drop-lists": "^2.1.0",
     "angular-material": "^1.1.1",
     "angular-swagger-ui": "^0.4.1",
     "angular-ui-router": "1.0.0-beta.1",
+    "api-console": "^2.0.4",
     "dragular": "^4.3.0",
     "highcharts": "^5.0.7",
     "jsdiff": "^1.1.1",

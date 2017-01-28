@@ -1,5 +1,4 @@
-import * as angular from 'angular';
-
+import 'angular';
 import 'angular-ui-router';
 import routesConfig from './routes';
 
