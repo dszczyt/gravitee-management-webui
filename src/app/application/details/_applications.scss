@@ -1,3 +1,5 @@
+@import '../../_constants.scss';
+
 .application-general-container {
 	position: relative;
 	border-radius: 3px;
@@ -55,7 +57,7 @@
 }
 
 .gravitee-application-header-image {
-  background: #ffffff url('../app/images/GRAVITEE_LOGOsstxtclair-05.png') no-repeat center center;
+  background: #ffffff url('app/images/GRAVITEE_LOGOsstxtclair-05.png') no-repeat center center;
   background-size: contain;
   margin-right: 20px;
   min-width:110px;
