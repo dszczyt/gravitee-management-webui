@@ -20,12 +20,10 @@ interface IMember {
 }
 
 class ApplicationService {
-  private baseURL: string;
   private applicationsURL: string;
 
-  constructor(private $http: ng.IHttpService, private $q: ng.IQService) {
-		this.baseURL = '/management';
-    this.applicationsURL = `${this.baseURL}applications/`;
+  constructor(private $http: ng.IHttpService, Constants, private $q: ng.IQService) {
+    this.applicationsURL = `${Constants.baseURL}applications/`;
   }
 
   private subscriptionsURL(applicationId: string): string {

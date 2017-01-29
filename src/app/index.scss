@@ -1,6 +1,14 @@
+@import '_constants.scss';
+@import 'main/main.scss';
 @import 'user/_user.scss';
 @import 'application/details/_applications.scss';
 @import 'api/_api.scss';
+@import 'api/admin/analytics/analytics.scss';
+@import 'api/admin/creation/_apiCreation.scss';
+@import 'api/admin/events/_apiEvents.scss';
+@import 'api/admin/healthcheck/_healthcheck.scss';
+@import 'api/admin/history/_apiHistory.scss';
+@import 'api/admin/documentation/_apiDocumentation.scss';
 @import 'components/sidenav/_sidenav.scss';
 
 $backgroundColor: #fafafa;
