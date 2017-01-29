@@ -49,15 +49,12 @@ function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: 
       controllerAs: 'apisCtrl',
       resolve: {
         resolvedApis: (ApiService: ApiService) => ApiService.list(),
-        views: (ViewService: ViewService) => {
-          return ViewService.list().then(response => {
+        views: (ViewService: ViewService) => ViewService.list().then(response => {
             let views = response.data;
-            let selectedIndex;
             views.unshift({id: 'all', name: 'All APIs'});
-
+            console.log(views);
             return views;
-          });
-        }
+          })
       },
       data: {
         menu: {
