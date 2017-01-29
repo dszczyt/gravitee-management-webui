@@ -39,7 +39,7 @@ class SideNavController {
     $scope.userCreationEnabled = Constants.userCreationEnabled;
 
     this.routeMenuItems = _.filter($state.get(), function (state: any) {
-      return !state.abstract && state.menu;
+      return !state.abstract && state.data && state.data.menu;
     });
 
     this.loadMenuItems();
@@ -62,7 +62,7 @@ class SideNavController {
       this.checkRedirectIfNotAllowed(toState, fromState, event);
       $scope.subMenuItems = _.filter(this.routeMenuItems, function (routeMenuItem: any) {
         var routeMenuItemSplitted = routeMenuItem.name.split('.'), toStateSplitted = toState.name.split('.');
-        return !routeMenuItem.menu.firstLevel &&
+        return !routeMenuItem.data.menu.firstLevel &&
           routeMenuItemSplitted[0] === toStateSplitted[0] && routeMenuItemSplitted[1] === toStateSplitted[1];
       });
     });
@@ -87,7 +87,7 @@ class SideNavController {
   loadMenuItems() {
     var that = this;
     that.$scope.menuItems = _.filter(this.routeMenuItems, function (routeMenuItem: any) {
-      var isMenuItem = routeMenuItem.menu.firstLevel && (!routeMenuItem.roles || that.UserService.isUserInRoles(routeMenuItem.roles));
+      var isMenuItem = routeMenuItem.data.menu.firstLevel && (!routeMenuItem.data.roles || that.UserService.isUserInRoles(routeMenuItem.data.roles));
       if (that.$rootScope.devMode) {
         return isMenuItem && routeMenuItem.devMode;
       } else {

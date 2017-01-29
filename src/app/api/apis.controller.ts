@@ -21,8 +21,7 @@ class ApisController {
   private apisScrollAreaHeight: number;
   private isAPIsHome: boolean;
   private createMode: boolean;
-  private views: any;
-  private selectedIndex: any;
+  private selectedIndex: number;
   private apis: any;
   private devMode: boolean;
   private syncStatus: any;
@@ -37,7 +36,8 @@ class ApisController {
     private Constants,
     private resolvedApis,
     private ViewService,
-    private $q: ng.IQService
+    private $q: ng.IQService,
+    private views: any[]
   ) {
     'ngInject';
     this.graviteeUIVersion = Constants.version;
@@ -48,7 +48,15 @@ class ApisController {
     this.goToView(this.$state.params.view || 'all');
     this.createMode = !$rootScope.devMode && Object.keys($rootScope.graviteeUser).length > 0;
 
-    ViewService.list().then(response => {
+    if (views.length && this.$state.params.view) {
+      this.selectedIndex = _.findIndex(views, (view: any) => {
+        return view.id === this.$state.params.view;
+      });
+    } else {
+      this.selectedIndex = 0;
+    }
+
+    /*ViewService.list().then(response => {
       this.views = response.data;
       this.views.unshift({id: 'all', name: 'All APIs'});
 
@@ -59,7 +67,7 @@ class ApisController {
       } else {
         this.selectedIndex = 0;
       }
-    });
+    });*/
   }
 
   goToView(view) {

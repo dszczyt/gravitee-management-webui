@@ -33,7 +33,7 @@ require('ngclipboard');
 require('angular-ui-validate');
 require('read-more/js/directives/readmore');
 require('angular-timeline');
-require('angular-utf8-base64/angular-utf8-base64.js');
+require('angular-utf8-base64');
 require('ng-file-upload');
 require('md-steppers');
 require('angular-ui-tree');
