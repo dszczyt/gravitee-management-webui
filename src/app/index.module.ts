@@ -33,7 +33,7 @@ require('ngclipboard');
 require('angular-ui-validate');
 require('read-more/js/directives/readmore');
 require('angular-timeline');
-require('angular-utf8-base64');
+require('angular-utf8-base64/angular-utf8-base64.js');
 require('ng-file-upload');
 require('md-steppers');
 require('angular-ui-tree');
@@ -150,7 +150,7 @@ import ChartDirective from './components/chart/chart.directive';
 angular.module('gravitee', ['ui.router', 'ngMaterial', /*'ramlConsoleApp',*/ 'ng-showdown', 'swaggerUi',
   'ngMdIcons', 'ui.codemirror', 'md.data.table', 'ngCookies', 'dragularModule', 'readMore',
   'ngMessages', 'vAccordion', 'schemaForm', 'ngclipboard', 'ui.validate', 'gvConstants', 'angular-timeline',
-  /*'ab-base64',*/  'ngFileUpload', 'md-steppers', 'ui.tree', 'angular-jwt'])
+  'utf8-base64',  'ngFileUpload', 'md-steppers', 'ui.tree', 'angular-jwt'])
   .config(config)
   .config(routerConfig)
   .config(interceptorConfig)
