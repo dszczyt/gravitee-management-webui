@@ -546,9 +546,13 @@ function routerConfig($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: 
     })
     .state('configuration.admin.views', {
       url: '/views',
-      templateUrl: 'app/configuration/admin/views/views.html',
+      component: 'views',
+      /*templateUrl: 'app/configuration/admin/views/views.html',
       controller: 'ViewsController',
-      controllerAs: 'viewsCtrl',
+      controllerAs: 'viewsCtrl',*/
+      resolve: {
+        views: (ViewService: ViewService) => ViewService.list().then(response => response.data)
+      },
       data: {
         menu: {
           label: 'Views',

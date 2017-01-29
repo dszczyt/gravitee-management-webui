@@ -18,25 +18,25 @@ import * as _ from 'lodash';
 class ViewsController {
   private viewsToCreate: any[];
   private viewsToUpdate: any[];
-  private views: any;
-  private initialViews: any;
+  private initialViews: any[];
+  private views: any[];
 
   constructor(
-    private $scope,
     private ViewService,
     private NotificationService,
     private $q,
     private $mdEditDialog,
-    private $mdDialog
+    private $mdDialog,
   ) {
     'ngInject';
 
-    this.loadViews();
+
+    //this.loadViews();
     this.viewsToCreate = [];
     this.viewsToUpdate = [];
   }
 
-  loadViews() {
+  /*loadViews() {
     this.ViewService.list().then(response =>{
       this.views = response.data;
       _.each(this.views, function(view) {
@@ -44,34 +44,32 @@ class ViewsController {
       });
       this.initialViews = _.cloneDeep(this.views);
     });
-  }
+  }*/
 
   newView(event) {
     event.stopPropagation();
 
-    var that = this;
+    this.$mdEditDialog
+      .small({
+        placeholder: 'Add a name',
+        save: input =>{
+          const view = {name: input.$modelValue};
+          this.views.push(view);
+          this.viewsToCreate.push(view);
+        },
+        targetEvent: event,
+        validators: {
+          'md-maxlength': 30
+        }
+      })
+      .then((ctrl) => {
+        const input = ctrl.getInput();
 
-    var promise = this.$mdEditDialog.small({
-      placeholder: 'Add a name',
-      save: function (input) {
-        var view = {name: input.$modelValue};
-        that.views.push(view);
-        that.viewsToCreate.push(view);
-      },
-      targetEvent: event,
-      validators: {
-        'md-maxlength': 30
-      }
-    });
-
-    promise.then(function (ctrl) {
-      var input = ctrl.getInput();
-
-      input.$viewChangeListeners.push(function () {
-        input.$setValidity('empty', input.$modelValue.length !== 0);
-        input.$setValidity('duplicate', !_.includes(_.map(that.views, 'name'), input.$modelValue));
+        input.$viewChangeListeners.push(() => {
+          input.$setValidity('empty', input.$modelValue.length !== 0);
+          input.$setValidity('duplicate', !_.includes(_.map(this.views, 'name'), input.$modelValue));
+        });
       });
-    });
   }
 
   editName(event, view) {
@@ -132,7 +130,7 @@ class ViewsController {
       this.ViewService.update(that.viewsToUpdate)
     ]).then(function () {
       that.NotificationService.show("Views saved with success");
-      that.loadViews();
+      // that.loadViews();
       that.viewsToCreate = [];
       that.viewsToUpdate = [];
     });
