@@ -21,8 +21,8 @@ class ApisController {
   private apisScrollAreaHeight: number;
   private isAPIsHome: boolean;
   private createMode: boolean;
-  private selectedIndex: number;
-  private apis: any;
+  private selectedIndex: number = 0;
+  // private apis: any;
   private devMode: boolean;
   private syncStatus: any;
   private NotificationService: any;
@@ -31,30 +31,21 @@ class ApisController {
     private ApiService,
     private $mdDialog,
     private $scope,
-    private $state,
+    private $state: ng.ui.IStateService,
     private $rootScope,
     private Constants,
-    private resolvedApis,
-    private ViewService,
+    private apis,
     private $q: ng.IQService,
-    private views: any[]
+    private views: any[],
   ) {
     'ngInject';
     this.graviteeUIVersion = Constants.version;
-    this.resolvedApis = resolvedApis;
+    // this.resolvedApis = resolvedApis;
 
-    this.apisScrollAreaHeight = this.$state.current.name === 'apis.list' ? 195 : 90;
-    this.isAPIsHome = this.$state.current.name.startsWith('apis');
-    this.goToView(this.$state.params.view || 'all');
+    this.apisScrollAreaHeight = $state.is('apis.list') ? 195 : 90;
+    this.isAPIsHome = this.$state.includes('apis');
+    //this.goToView(this.$state.params.view || 'all');
     this.createMode = !$rootScope.devMode && Object.keys($rootScope.graviteeUser).length > 0;
-
-    if (views.length && this.$state.params.view) {
-      this.selectedIndex = _.findIndex(views, (view: any) => {
-        return view.id === this.$state.params.view;
-      });
-    } else {
-      this.selectedIndex = 0;
-    }
 
     /*ViewService.list().then(response => {
       this.views = response.data;
@@ -71,11 +62,11 @@ class ApisController {
   }
 
   goToView(view) {
-    this.$state.go(this.$state.current, {view: view}, {notify: false});
-    this.loadApis(view);
+    this.$state.go('.', {view: view}, {reload: false, notify: false});
+    // this.loadApis(view);
   }
 
-  loadApis(viewId) {
+  /*loadApis(viewId) {
     var that = this;
     this.$q.resolve(viewId)
       .then( (viewId) => {
@@ -117,7 +108,7 @@ class ApisController {
     this.ApiService.list().then(response => {
       this.apis = response.data;
     });
-  }
+  }*/
 
   update(api) {
     this.ApiService.update(api).then(() => {
@@ -170,11 +161,11 @@ class ApisController {
       controllerAs: 'dialogApiDefinitionCtrl',
       templateUrl: 'app/api/admin/general/dialog/apiDefinition.dialog.html',
       apiId: ''
-    }).then(function (response) {
+    })/*.then(function (response) {
       if (response) {
         that.list();
       }
-    });
+    })*/;
   }
 
   showImportSwaggerDialog() {
