@@ -150,7 +150,7 @@ import ChartDirective from './components/chart/chart.directive';
 angular.module('gravitee', ['ui.router', 'ngMaterial', /*'ramlConsoleApp',*/ 'ng-showdown', 'swaggerUi',
   'ngMdIcons', 'ui.codemirror', 'md.data.table', 'ngCookies', 'dragularModule', 'readMore',
   'ngMessages', 'vAccordion', 'schemaForm', 'ngclipboard', 'ui.validate', 'gvConstants', 'angular-timeline',
-  /*'ab-base64',*/  'ngFileUpload', 'md-steppers', 'ui.tree', 'angular-jwt'])
+  'ab-base64',  'ngFileUpload', 'md-steppers', 'ui.tree', 'angular-jwt'])
   .config(config)
   .config(routerConfig)
   .config(interceptorConfig)
